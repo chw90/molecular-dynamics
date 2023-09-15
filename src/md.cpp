@@ -1,13 +1,19 @@
 #include "initialize.h"
+#include "potentials.h"
+#include "integrators.h"
 #include <iostream>
 
 int main () {
 
+  // initialize options and particles
   auto opt = initialize_options();
-  auto p = initialize_particles();
+  auto particles = initialize_particles();
 
-  for ( auto x: opt.b.hi ) {
-    std::cout << x << std::endl;
-  }
+  // set potential
+  auto pot = potential_gravitation(1.0);
+
+  // run
+  velocity_verlet(particles, pot, opt);
+
   return 0;
 }

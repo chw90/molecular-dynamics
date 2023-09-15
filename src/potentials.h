@@ -9,7 +9,36 @@ class potential {
     virtual void evaluate(particle<dim> pi, particle<dim> pj) = 0;
 };
 
-template<typename T>
-void compute_forces(T particles, potential &pot);
+class potential_gravitation : public potential {
+  // gravitational potential
+  double const gamma;           // gravitational constant
+  public:
+    virtual void evaluate(particle<dim> pi, particle<dim> pj);
+    potential_gravitation(double gamma) : gamma(gamma) {};
+};
+
+class potential_lj : public potential {
+  // 12/6 Lennard-Jones potential
+  double const sigma;
+  double const epsilon;
+
+  public:
+    void evaluate(particle<dim> pi, particle<dim> pj);
+    potential_lj(double sigma, double epsilon) : sigma(sigma), epsilon(epsilon) {};
+};
+
+class potential_mie : public potential {
+  // Mie potential
+  double const n = 1.0;
+  double const m = 1.0;
+  double const cn = 1.0;
+  double const cm = 1.0;
+
+  public:
+    void evaluate(particle<dim> pi, particle<dim> pj);
+    potential_mie(double n, double m, double cn, double cm) : n(n), m(m), cn(cn), cm(cm) {};
+};
+
+// TODO: Buckingham potential, Coulomb potential
 
 #endif // POTENTIALS_H_

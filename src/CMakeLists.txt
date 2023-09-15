@@ -4,8 +4,9 @@ set(SOURCES
   parameters.h
   types.cpp
   initialize.cpp
-  integrators.cpp
+  integrators.h
   potentials.cpp
+  statistics.h
 )
 
 add_executable("${PROJECT_NAME}" "${SOURCES}" md.cpp)
