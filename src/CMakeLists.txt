@@ -3,10 +3,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(SOURCES
   parameters.h
   types.cpp
-  initialize.cpp
+  initializers.cpp
   integrators.h
   potentials.cpp
   statistics.h
+  output.cpp
 )
 
 add_executable("${PROJECT_NAME}" "${SOURCES}" md.cpp)

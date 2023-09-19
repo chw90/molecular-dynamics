@@ -11,6 +11,8 @@ template<typename T>
 void velocity_verlet(T &particles, potential &pot, options &opt) {
   // integrate using the velocity Verlet scheme
 
+  print_header();               // table header for statistics output
+
   unsigned i = 0;               // timestep counter
   auto t = opt.t_start;         // time
 

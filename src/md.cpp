@@ -1,4 +1,4 @@
-#include "initialize.h"
+#include "initializers.h"
 #include "potentials.h"
 #include "integrators.h"
 #include <iostream>

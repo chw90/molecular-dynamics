@@ -1,13 +1,19 @@
 #ifndef STATISTICS_H_
 #define STATISTICS_H_
 
+#include "output.h"
 #include <cmath>
 #include <iostream>
+
+void print_header() {
+  // print the table header for the output of print_statistics
+  print("temperature", "kinetic energy");
+}
 
 template<typename T>
 void print_statistics(T &particles, double const &t) {
   auto e_kin = kinetic_energy(particles);
-  std::cout << " time: t = " << t << " kinetic energy: e = " << e_kin << std::endl;
+  print(t, e_kin);
 }
 
 template<typename T>
@@ -20,8 +26,5 @@ double kinetic_energy(T &particles) {
   }
   return e;
 }
-
-template<typename T>
-void print_statistics(T &particles, double const &t);
 
 #endif // STATISTICS_H_

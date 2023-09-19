@@ -1,4 +1,4 @@
-#include "initialize.h"
+#include "initializers.h"
 
 options initialize_options() {
   // initialize the simulation options
