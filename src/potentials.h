@@ -6,14 +6,14 @@
 class potential {
   // abstract base class for potentials
   public:
-    virtual void evaluate(particle<dim> pi, particle<dim> pj) = 0;
+    virtual void evaluate(particle<dim> &pi, particle<dim> &pj) = 0;
 };
 
 class potential_gravitation : public potential {
   // gravitational potential
   double const gamma;           // gravitational constant
   public:
-    virtual void evaluate(particle<dim> pi, particle<dim> pj);
+    virtual void evaluate(particle<dim> &pi, particle<dim> &pj);
     potential_gravitation(double gamma) : gamma(gamma) {};
 };
 
@@ -23,7 +23,7 @@ class potential_lj : public potential {
   double const epsilon;
 
   public:
-    void evaluate(particle<dim> pi, particle<dim> pj);
+    void evaluate(particle<dim> &pi, particle<dim> &pj);
     potential_lj(double sigma, double epsilon) : sigma(sigma), epsilon(epsilon) {};
 };
 
@@ -35,7 +35,7 @@ class potential_mie : public potential {
   double const cm = 1.0;
 
   public:
-    void evaluate(particle<dim> pi, particle<dim> pj);
+    void evaluate(particle<dim> &pi, particle<dim> &pj);
     potential_mie(double n, double m, double cn, double cm) : n(n), m(m), cn(cn), cm(cm) {};
 };
 

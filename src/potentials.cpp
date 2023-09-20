@@ -11,7 +11,7 @@ double distance(particle<dim> const &pi, particle<dim> const &pj) {
   return std::sqrt(r);
 }
 
-void potential_gravitation::evaluate(particle<dim> pi, particle<dim> pj) {
+void potential_gravitation::evaluate(particle<dim> &pi, particle<dim> &pj) {
   // compute pair forces
   auto r = distance(pi, pj);
   for ( int k = 0; k < dim; k++ ) {
@@ -21,7 +21,7 @@ void potential_gravitation::evaluate(particle<dim> pi, particle<dim> pj) {
   }
 };
 
-void potential_lj::evaluate(particle<dim> pi, particle<dim> pj) {
+void potential_lj::evaluate(particle<dim> &pi, particle<dim> &pj) {
   // compute pair forces
   auto r = distance(pi, pj);
   auto s = std::pow(sigma/r, 6);
@@ -32,7 +32,7 @@ void potential_lj::evaluate(particle<dim> pi, particle<dim> pj) {
   }
 };
 
-void potential_mie::evaluate(particle<dim> pi, particle<dim> pj) {
+void potential_mie::evaluate(particle<dim> &pi, particle<dim> &pj) {
   // compute pair forces
   auto r = distance(pi, pj);
   for ( int k = 0; k < dim; k++ ) {

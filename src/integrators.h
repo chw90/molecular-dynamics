@@ -52,7 +52,7 @@ void leapfrog(T &particles, potential &pot, options &opt) {
 template<typename T>
 void update_positions(T &particles, double const &delta_t) {
   // position update
-  for ( auto p: particles ) {
+  for ( auto &p: particles ) {
     for ( int k = 0; k < dim; k++) {
       p.x[k] += delta_t * (p.v[k] + 0.5*delta_t/p.m*p.f[k]);
       p.buffer[k] = p.f[k];     // buffer old forces
@@ -63,9 +63,9 @@ void update_positions(T &particles, double const &delta_t) {
 template<typename T>
 void update_velocities(T &particles, double const &delta_t) {
   // velocity update
-  for ( auto p: particles ) {
+  for ( auto &p: particles ) {
     for ( int k = 0; k < dim; k++) {
-      p.v[k] += 0.5*delta_t/p.m * (p.f[k]-p.buffer[k]);
+      p.v[k] += 0.5*delta_t/p.m * (p.f[k]+p.buffer[k]);
     }
   }
 }
@@ -73,7 +73,7 @@ void update_velocities(T &particles, double const &delta_t) {
 template<typename T>
 void update_forces(T &particles, potential &pot) {
   // force update
-  for ( auto p: particles ) {
+  for ( auto &p: particles ) {
     // reset forces
     p.f.fill(0);
   }
