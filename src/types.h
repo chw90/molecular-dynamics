@@ -3,6 +3,7 @@
 
 #include "parameters.h"
 #include <array>
+#include <fstream>
 
 using array = std::array<double, dim>;
 
@@ -34,9 +35,12 @@ struct options {
   double delta_t;               // timestep
   double t_start;               // start time
   double t_end;                 // end time
-  int output_freq;              // output frequency
+  std::ofstream df;             // output dump file
+  int freq;                     // output dump frequency
 
-  options(box<dim> b, double dt, double ts, double te, int of) : b(b), delta_t(dt), t_start(ts), t_end(te), output_freq(of) {};
+  options(box<dim> b, double dt, double ts, double te, int freq) : b(b), delta_t(dt), t_start(ts), t_end(te), freq(freq) {
+    df.open(dump_file);
+  };
 };
 
 #endif // TYPES_H_
