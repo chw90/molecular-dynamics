@@ -11,13 +11,13 @@ void print_header() {
 }
 
 template<typename T>
-void print_statistics(T &particles, double const &t) {
+void print_statistics(T const &particles, double const &t) {
   auto e_kin = kinetic_energy(particles);
   print(t, e_kin);
 }
 
 template<typename T>
-double kinetic_energy(T &particles) {
+double kinetic_energy(T const &particles) {
   double e = 0.0;
   for ( auto p: particles) {
     for ( auto v: p.v) {

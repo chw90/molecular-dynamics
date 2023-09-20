@@ -2,7 +2,7 @@
 #include "potentials.h"
 #include <cmath>
 
-double distance(particle<dim> pi, particle<dim> pj) {
+double distance(particle<dim> const &pi, particle<dim> const &pj) {
   // compute the distance between two given particles
   double r = 0.0;
   for ( int k = 0; k < dim; k++ ) {
