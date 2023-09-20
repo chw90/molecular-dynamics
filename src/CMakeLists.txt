@@ -6,6 +6,8 @@ set(SOURCES
   initializers.cpp
   integrators.h
   potentials.cpp
+  fields.h
+  boundaries.h
   statistics.h
   output.h
 )

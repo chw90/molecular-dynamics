@@ -5,12 +5,13 @@
 #include "types.h"
 #include "potentials.h"
 #include "fields.h"
+#include "boundaries.h"
 #include "statistics.h"
 #include "output.h"
 #include <vector>
 
 template<typename T>
-void velocity_verlet(T &particles, potential &pot, field &field, options &opt) {
+void velocity_verlet(T &particles, potential &pot, boundary &bound, field &field, options &opt) {
   // integrate using the velocity Verlet scheme
 
   print_header();               // table header for statistics output
@@ -20,13 +21,13 @@ void velocity_verlet(T &particles, potential &pot, field &field, options &opt) {
 
   dump(particles, opt, t);      // dump initial particle data to disk
 
-  update_forces(particles, pot, field);
+  update_forces(particles, pot, bound, field, opt);
   // iterate over timesteps
   while ( t < opt.t_end ) {
     t += opt.delta_t;
 
     update_positions(particles, opt.delta_t);
-    update_forces(particles, pot, field);
+    update_forces(particles, pot, bound, field, opt);
     update_velocities(particles, opt.delta_t);
 
     // print statistics to stdout and dump particle data to disk
@@ -38,17 +39,17 @@ void velocity_verlet(T &particles, potential &pot, field &field, options &opt) {
 }
 
 template<typename T>
-void stroemer_verlet(T &particles, potential &pot, field &field, options &opt) {
+void stroemer_verlet(T &particles, potential &pot, boundary &bound, field &field, options &opt) {
   // integrate using the Stroemer Verlet scheme
 }
 
 template<typename T>
-void position_verlet(T &particles, potential &pot, field &field, options &opt) {
+void position_verlet(T &particles, potential &pot, boundary &bound, field &field, options &opt) {
   // integrate using the position Verlet scheme
 }
 
 template<typename T>
-void leapfrog(T &particles, potential &pot, field &field, options &opt) {
+void leapfrog(T &particles, potential &pot, boundary &bound, field &field, options &opt) {
   // integrate using the leapfrog scheme
 }
 
@@ -74,11 +75,13 @@ void update_velocities(T &particles, double const &delta_t) {
 }
 
 template<typename T>
-void update_forces(T &particles, potential &pot, field &field) {
+void update_forces(T &particles, potential &pot, boundary &bound, field &field, options &opt) {
   // force update
   for ( auto &p: particles ) {
     // apply field
     field.apply(p);
+    // apply boundary
+    bound.apply(p, opt.b);
   }
   for ( auto i = particles.begin(); i != particles.end(); i++) {
     for ( auto j = i+1; j != particles.end(); j++ ) {
