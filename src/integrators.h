@@ -5,6 +5,7 @@
 #include "types.h"
 #include "potentials.h"
 #include "statistics.h"
+#include "output.h"
 #include <vector>
 
 template<typename T>
@@ -16,8 +17,9 @@ void velocity_verlet(T &particles, potential &pot, options &opt) {
   unsigned i = 0;               // timestep counter
   auto t = opt.t_start;         // time
 
-  update_forces(particles, pot);
+  dump(particles, opt, t);      // dump initial particle data to disk
 
+  update_forces(particles, pot);
   // iterate over timesteps
   while ( t < opt.t_end ) {
     t += opt.delta_t;
@@ -26,9 +28,9 @@ void velocity_verlet(T &particles, potential &pot, options &opt) {
     update_forces(particles, pot);
     update_velocities(particles, opt.delta_t);
 
+    // print statistics to stdout and dump particle data to disk
     print_statistics(particles, t);
-
-    // TODO: dump output
+    if ( i % opt.freq == 0) dump(particles, opt, t);
 
     i += 1;
   }
