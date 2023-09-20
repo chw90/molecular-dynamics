@@ -39,6 +39,6 @@ class potential_mie : public potential {
     potential_mie(double n, double m, double cn, double cm) : n(n), m(m), cn(cn), cm(cm) {};
 };
 
-// TODO: Buckingham potential, Coulomb potential
+// TODO: Buckingham potential, Coulomb potential, null potential
 
 #endif // POTENTIALS_H_
