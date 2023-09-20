@@ -29,10 +29,10 @@ class potential_lj : public potential {
 
 class potential_mie : public potential {
   // Mie potential
-  double const n = 1.0;
-  double const m = 1.0;
-  double const cn = 1.0;
-  double const cm = 1.0;
+  double const n;
+  double const m;
+  double const cn;
+  double const cm;
 
   public:
     void evaluate(particle<dim> &pi, particle<dim> &pj);

@@ -4,12 +4,13 @@
 #include "parameters.h"
 #include "types.h"
 #include "potentials.h"
+#include "fields.h"
 #include "statistics.h"
 #include "output.h"
 #include <vector>
 
 template<typename T>
-void velocity_verlet(T &particles, potential &pot, options &opt) {
+void velocity_verlet(T &particles, potential &pot, field &field, options &opt) {
   // integrate using the velocity Verlet scheme
 
   print_header();               // table header for statistics output
@@ -19,13 +20,13 @@ void velocity_verlet(T &particles, potential &pot, options &opt) {
 
   dump(particles, opt, t);      // dump initial particle data to disk
 
-  update_forces(particles, pot);
+  update_forces(particles, pot, field);
   // iterate over timesteps
   while ( t < opt.t_end ) {
     t += opt.delta_t;
 
     update_positions(particles, opt.delta_t);
-    update_forces(particles, pot);
+    update_forces(particles, pot, field);
     update_velocities(particles, opt.delta_t);
 
     // print statistics to stdout and dump particle data to disk
@@ -37,17 +38,17 @@ void velocity_verlet(T &particles, potential &pot, options &opt) {
 }
 
 template<typename T>
-void stroemer_verlet(T &particles, potential &pot, options &opt) {
+void stroemer_verlet(T &particles, potential &pot, field &field, options &opt) {
   // integrate using the Stroemer Verlet scheme
 }
 
 template<typename T>
-void position_verlet(T &particles, potential &pot, options &opt) {
+void position_verlet(T &particles, potential &pot, field &field, options &opt) {
   // integrate using the position Verlet scheme
 }
 
 template<typename T>
-void leapfrog(T &particles, potential &pot, options &opt) {
+void leapfrog(T &particles, potential &pot, field &field, options &opt) {
   // integrate using the leapfrog scheme
 }
 
@@ -73,11 +74,11 @@ void update_velocities(T &particles, double const &delta_t) {
 }
 
 template<typename T>
-void update_forces(T &particles, potential &pot) {
+void update_forces(T &particles, potential &pot, field &field) {
   // force update
   for ( auto &p: particles ) {
-    // reset forces
-    p.f.fill(0);
+    // apply field
+    field.apply(p);
   }
   for ( auto i = particles.begin(); i != particles.end(); i++) {
     for ( auto j = i+1; j != particles.end(); j++ ) {
