@@ -19,32 +19,32 @@ void print(T const &arg, const TS&... args) {
 }
 
 template<typename T, int dim>
-void dump(System<T, dim> const &sys, Options &opt, double const &t) {
+void dump(System<T, dim> const &sys, Options &opt, unsigned const &step) {
 
     // timestep header
-    opt.df << "ITEM: TIMESTEP" << std::endl << t << std::endl;
+    opt.df << "ITEM: TIMESTEP" << std::endl << step << std::endl;
     opt.df << "ITEM: NUMBER OF ATOMS" << std::endl << sys.particles.size() << std::endl;
 
     // box bounds
-    opt.df << "ITEM: BOX BOUNDS ss ss ss" << std::endl;
-    for ( int i = 0; i < dim; i++ ) {
-        opt.df << sys.box.lo[i] << " " << sys.box.hi[i];
+    opt.df << "ITEM: BOX BOUNDS ff ff ff" << std::endl;
+    for ( int k = 0; k < dim; k++ ) {
+        opt.df << sys.box.lo[k] << " " << sys.box.hi[k];
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
         opt.df << std::endl;
     }
     if constexpr ( dim == 2 ) opt.df << 0.0 << " " << 0.0 << " " << 0.0 << std::endl;
 
     // particle data
-    opt.df << "ITEM: ATOMS id type xs ys zs" << std::endl;
-    int i = 0;
+    opt.df << "ITEM: ATOMS id type x y z" << std::endl;
+    int l = 0;
     for ( auto p: sys.particles) {
-        opt.df << i << " " << p.type;
-        for ( int j = 0; j < dim; j++ ) {
-            opt.df << " " << p.x[j];
+        opt.df << l << " " << p.type;
+        for ( int k = 0; k < dim; k++ ) {
+            opt.df << " " << p.x[k];
         }
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
         opt.df << std::endl;
-        i++;
+        l++;
     }
 }
 

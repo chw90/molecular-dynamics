@@ -24,6 +24,7 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
   update_forces(sys, pot, bound, field, opt);
   // iterate over timesteps
   while ( t < opt.te ) {
+    i += 1;
     t += opt.dt;
 
     update_positions(sys, opt.dt);
@@ -32,9 +33,7 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
 
     // print statistics to stdout and dump particle data to disk
     print_statistics(sys, t);
-    if ( i % opt.freq == 0) dump(sys, opt, t);
-
-    i += 1;
+    if ( i % opt.freq == 0) dump(sys, opt, i);
   }
 }
 
