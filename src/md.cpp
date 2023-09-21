@@ -3,24 +3,23 @@
 #include "fields.h"
 #include "boundaries.h"
 #include "integrators.h"
-#include <iostream>
 
 int main () {
 
   // initialize system
-  auto sys = system_planets();
+  auto sys = system_helium();
 
   // set potential
-  auto pot = PotentialGravitation<dim>(1.0);
+  auto pot = PotentialNone<dim>(); // PotentialGravitation<dim>(1.0);
 
   // set field
   auto field = FieldNone<dim>(); // FieldGravity({9.81, 0.0})
 
   // set boundary
-  auto boundary = BoundaryNone<dim>(); // BoundaryWallHarmonic(1.0, 0.05);
+  auto boundary = BoundaryWallHarmonic<dim>(1.0, 5e-3); //
 
   // initialize options
-  auto opt = options_planets();
+  auto opt = options_helium();
 
   // run
   velocity_verlet(sys, pot, boundary, field, opt);

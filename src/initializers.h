@@ -7,7 +7,9 @@
 using vector = std::vector<Particle<dim>>;
 
 System<vector, dim> system_planets();
+System<vector, dim> system_helium();
 
 Options options_planets();
+Options options_helium();
 
 #endif // INITIALIZE_H_
