@@ -7,13 +7,13 @@
 
 void print_header() {
   // print the table header for the output of print_statistics
-  print("time", "kinetic energy");
+  print("step", "time", "kinetic energy");
 }
 
 template<typename T, int dim>
-void print_statistics(System<T, dim> &sys, double const &t) {
+void print_statistics(System<T, dim> &sys, int const &i, double const &t) {
   auto e_kin = kinetic_energy(sys.particles);
-  print(t, e_kin);
+  print(i, t, e_kin);
 }
 
 template<typename T>

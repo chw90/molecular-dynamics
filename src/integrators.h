@@ -32,7 +32,7 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
     update_velocities(sys, opt.dt);
 
     // print statistics to stdout and dump particle data to disk
-    print_statistics(sys, t);
+    print_statistics(sys, i, t);
     if ( i % opt.freq == 0) dump(sys, opt, i);
   }
 }

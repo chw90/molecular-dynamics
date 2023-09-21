@@ -42,7 +42,7 @@ Options options_planets() {
 // helium gas problem
 System<vector, dim> system_helium() {
   // set constants
-  double const KB = 1.380649e-23;   // Boltzmann constant
+  double const kb = 1.380649e-23;   // Boltzmann constant
   double const m = 6.646476406e-27; // mass
   double const T = 293.15;          // initial temperature
   double const P = 1e5;             // initial pressure
@@ -50,15 +50,15 @@ System<vector, dim> system_helium() {
 
   // initialize bounding box
   double const lower = 0.0;
-  auto const upper = std::pow(N*KB*T/P, 1.0/dim); // box edge length
+  auto const upper = std::pow(N*kb*T/P, 1.0/dim); // box edge length
   std::array<double, dim> lo, hi;
   lo.fill(lower);
   hi.fill(upper);
   auto b = Box<dim>(lo, hi);
 
   // initialize particles with Maxwell-Boltzmann distributed velocity magnitudes
-  auto standard_deviation = std::sqrt(KB*T/m);
   auto separation = 1e-2*(upper-lower); // initial minimum distance of particles to box bounds
+  auto standard_deviation = std::sqrt(kb*T/m);
   std::random_device rdev;
   std::default_random_engine reng(rdev());
   std::uniform_real_distribution position_component(lower+separation, upper-separation);
