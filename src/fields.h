@@ -3,32 +3,32 @@
 
 #include "types.h"
 
-class field {
+template<int dim>
+class Field {
   // abstract base class for potentials
   public:
-    virtual void apply(particle<dim> &p) = 0;
+    virtual void apply(Particle<dim> &p) = 0;
 };
 
-class field_null : public field {
+template<int dim>
+class FieldNone : public Field<dim> {
   // no external field
   public:
-    void apply(particle<dim> &p) {
-      // set zero force
-      p.f.fill(0.0);
-    }
+    void apply(Particle<dim> &p) {};
 };
 
-class field_gravity : public field {
+template<int dim>
+class FieldGravity : public Field<dim>  {
   // gravitational field
   array const g;                      // gravitational acceleration
   public:
-    void apply(particle<dim> &p) {
+    FieldGravity(array g) : g(g) {};
+    void apply(Particle<dim> &p) {
       // set gravitational force
       for ( int k = 0; k < dim; k++ ) {
-        p.f[k] = p.m*g[k];
+        p.f[k] += p.m*g[k];
       }
     }
-    field_gravity(array g) : g(g) {};
 };
 
 #endif // FIELDS_H_

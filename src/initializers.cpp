@@ -1,42 +1,39 @@
 #include "initializers.h"
 
-options initialize_options() {
-  // initialize the simulation options
+// planet n-body problem
+System<vector, dim> system_planets() {
 
-  // set box
   double lower = 0.0, upper = 1.0;    // unit sizes
   std::array<double, dim> lo, hi;
   lo.fill(lower);
   hi.fill(upper);
-  auto b = box<dim>(lo, hi);
+  auto b = Box<dim>(lo, hi);
 
+  vector p;
+  auto p1 = Particle<dim>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // sun
+  auto p2 = Particle<dim>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // earth
+  auto p3 = Particle<dim>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // jupiter
+  auto p4 = Particle<dim>(4, 1.0e-14, {34.75, 0.0}, {0.0, 0.0296}, {0.0, 0.0}, {0.0, 0.0}); // halley
+
+  p.push_back(p1);
+  p.push_back(p2);
+  p.push_back(p3);
+  p.push_back(p4);
+
+  return System(p, b);
+}
+
+Options options_planets() {
   // set time stepping options
-  double delta_t = 0.015;
-  double t_start = 0.0;
-  double t_end = 468.5;
+  double dt = 0.015;
+  double ts = 0.0;
+  double te = 20*468.5;
 
   // set output options
-  int freq = 50;
+  int freq = 250;
 
   // construct options
-  options opt(b, delta_t, t_start, t_end, freq);
-
-  return opt;
+  return Options(dt, ts, te, freq);
 }
 
-std::vector<particle<dim>> initialize_particles() {
-  // initialize the particle list
-  std::vector<particle<dim>> particles;
-
-  auto p1 = particle<dim>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // sun
-  auto p2 = particle<dim>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // earth
-  auto p3 = particle<dim>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // jupiter
-  auto p4 = particle<dim>(4, 1.0e-14, {34.75, 0.0}, {0.0, 0.0296}, {0.0, 0.0}, {0.0, 0.0}); // halley
-
-  particles.push_back(p1);
-  particles.push_back(p2);
-  particles.push_back(p3);
-  particles.push_back(p4);
-
-  return particles;
-}
+// argon gas problem

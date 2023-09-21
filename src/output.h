@@ -18,17 +18,17 @@ void print(T const &arg, const TS&... args) {
     print(args...);
 }
 
-template<typename T>
-void dump(T const &particles, options &opt, double const &t) {
+template<typename T, int dim>
+void dump(System<T, dim> const &sys, Options &opt, double const &t) {
 
     // timestep header
     opt.df << "ITEM: TIMESTEP" << std::endl << t << std::endl;
-    opt.df << "ITEM: NUMBER OF ATOMS" << std::endl << particles.size() << std::endl;
+    opt.df << "ITEM: NUMBER OF ATOMS" << std::endl << sys.particles.size() << std::endl;
 
     // box bounds
     opt.df << "ITEM: BOX BOUNDS ss ss ss" << std::endl;
     for ( int i = 0; i < dim; i++ ) {
-        opt.df << opt.b.lo[i] << " " << opt.b.hi[i];
+        opt.df << sys.box.lo[i] << " " << sys.box.hi[i];
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
         opt.df << std::endl;
     }
@@ -37,7 +37,7 @@ void dump(T const &particles, options &opt, double const &t) {
     // particle data
     opt.df << "ITEM: ATOMS id type xs ys zs" << std::endl;
     int i = 0;
-    for ( auto p: particles) {
+    for ( auto p: sys.particles) {
         opt.df << i << " " << p.type;
         for ( int j = 0; j < dim; j++ ) {
             opt.df << " " << p.x[j];

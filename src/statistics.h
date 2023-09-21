@@ -10,9 +10,9 @@ void print_header() {
   print("temperature", "kinetic energy");
 }
 
-template<typename T>
-void print_statistics(T const &particles, double const &t) {
-  auto e_kin = kinetic_energy(particles);
+template<typename T, int dim>
+void print_statistics(System<T, dim> &sys, double const &t) {
+  auto e_kin = kinetic_energy(sys.particles);
   print(t, e_kin);
 }
 

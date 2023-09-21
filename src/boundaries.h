@@ -3,24 +3,28 @@
 
 #include "types.h"
 
-class boundary {
+template<int dim>
+class Boundary {
   // abstract base class for boundaries
   public:
-    virtual void apply(particle<dim> &p, box<dim> b) = 0;
+    virtual void apply(Particle<dim> &p, Box<dim> b) = 0;
 };
 
-class boundary_null : public boundary {
+template<int dim>
+class BoundaryNone : public Boundary<dim> {
   // no boundary
   public:
-    void apply(particle<dim> &p, box<dim> b) {};
+    void apply(Particle<dim> &p, Box<dim> b) {};
 };
 
-class boundary_wall_harmonic : public boundary {
+template<int dim>
+class BoundaryWallHarmonic : public Boundary<dim> {
   // fixed walls with harmonic repulsive potential
   double const epsilon;
   double const cutoff;
   public:
-    void apply(particle<dim> &p, box<dim> b) {
+    BoundaryWallHarmonic(double epsilon, double cutoff) : epsilon(epsilon), cutoff(cutoff) {};
+    void apply(Particle<dim> &p, Box<dim> b) {
       // set repulsive force
       for ( int k = 0; k < dim; k++ ) {
         auto dlo = p.x[k] - b.lo[k]; // distance to lower box bound
@@ -29,7 +33,6 @@ class boundary_wall_harmonic : public boundary {
         if ( dhi < cutoff ) p.f[k] -= - 2.0*epsilon*(dhi-cutoff);
       }
     }
-    boundary_wall_harmonic(double epsilon, double cutoff) : epsilon(epsilon), cutoff(cutoff) {};
 };
 
 

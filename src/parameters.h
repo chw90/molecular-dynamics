@@ -3,7 +3,7 @@
 
 #include<string>
 
-int const dim = 2;                       // dimension
+constexpr int const dim = 2;             // dimension
 std::string const dump_file = "md.dump"; // file name for output dump
 
 #endif // PARAMETERS_H_
