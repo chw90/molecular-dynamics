@@ -18,6 +18,9 @@ class Particle {
     array f;                      // force
     array buffer;                 // force buffer
     Particle(int t, double m, array x, array v, array f, array buffer) : type(t), m(m), x(x), v(v), f(f), buffer(buffer) {};
+    Particle(int t, double m) : type(t), m(m) {
+      x.fill(0.0); v.fill(0.0); f.fill(0.0); buffer.fill(0.0);
+    }
 };
 
 template<int dim>
