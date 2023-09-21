@@ -7,7 +7,7 @@
 
 void print_header() {
   // print the table header for the output of print_statistics
-  print("temperature", "kinetic energy");
+  print("time", "kinetic energy");
 }
 
 template<typename T, int dim>
