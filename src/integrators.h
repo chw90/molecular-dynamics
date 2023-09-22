@@ -46,12 +46,12 @@ void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
   // integrate using the position Verlet scheme
 }
 
-template<typename T, int dim=DIM>
-void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
+template<typename T=ParticleList<DIM>, int dim=DIM>
+void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
   // integrate using the leapfrog scheme
 }
 
-template<typename T, int dim=DIM>
+template<typename T=ParticleList<DIM>, int dim=DIM>
 void update_positions(System<T, dim> &sys, double const &delta_t) {
   // position update
   for ( auto &p: sys.particles ) {
@@ -62,7 +62,7 @@ void update_positions(System<T, dim> &sys, double const &delta_t) {
   }
 }
 
-template<typename T, int dim=DIM>
+template<typename T=ParticleList<DIM>, int dim=DIM>
 void update_velocities(System<T, dim> &sys, double const &delta_t) {
   // velocity update
   for ( auto &p: sys.particles ) {
@@ -72,7 +72,7 @@ void update_velocities(System<T, dim> &sys, double const &delta_t) {
   }
 }
 
-template<typename T, int dim=DIM>
+template<typename T=ParticleList<DIM>, int dim=DIM>
 void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
   // evaluate field and boundary forces
   for ( auto &p: sys.particles ) {

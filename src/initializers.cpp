@@ -3,7 +3,7 @@
 #include <random>
 
 // planet n-body problem
-System<vector<2>, 2> system_planets() {
+System<ParticleList<2>, 2> system_planets() {
   // set constants
   double const kb = 1.380649e-23;   // Boltzmann constant
 
@@ -15,7 +15,7 @@ System<vector<2>, 2> system_planets() {
   auto b = Box<2>(lo, hi);
 
   // initialize particles
-  vector<2> p;
+  ParticleList<2> p;
   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // sun
   auto p2 = Particle<2>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // earth
   auto p3 = Particle<2>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // jupiter
@@ -44,7 +44,7 @@ Options options_planets() {
 }
 
 // helium gas problem
-System<vector<DIM>, DIM> system_helium() {
+System<ParticleList<DIM>, DIM> system_helium() {
   // set constants
   double const kb = 1.380649e-23;   // Boltzmann constant
   double const m = 6.646476406e-27; // mass
@@ -67,7 +67,7 @@ System<vector<DIM>, DIM> system_helium() {
   std::default_random_engine reng(rdev());
   std::uniform_real_distribution position_component(lower+separation, upper-separation);
   std::normal_distribution velocity_component(0.0, standard_deviation);
-  vector<DIM> p;
+  ParticleList<DIM> p;
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<DIM>(1, m);
     for ( int k = 0; k < DIM; k++ ) {

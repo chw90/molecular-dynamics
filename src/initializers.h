@@ -2,13 +2,9 @@
 #define INITIALIZE_H_
 
 #include "types.h"
-#include <vector>
 
-template<int dim=DIM>
-using vector = std::vector<Particle<dim>>;
-
-System<vector<2>, 2> system_planets();
-System<vector<>, DIM> system_helium();
+System<ParticleList<2>, 2> system_planets();
+System<> system_helium();
 
 Options options_planets();
 Options options_helium();
