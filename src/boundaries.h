@@ -33,9 +33,10 @@ class BoundaryWallHarmonic : public Boundary<dim> {
         auto dhi = b.hi[k] - p.x[k]; // distance to upper box bound
         if ( dlo < 0.0 || dhi < 0.0 ) {
           throw std::runtime_error("BoundaryWallHarmonic: A particle has left the box.");
+        } else {
+          if ( dlo < cutoff*l ) p.f[k] += - 2.0*epsilon*(dlo-cutoff*l);
+          if ( dhi < cutoff*l ) p.f[k] -= - 2.0*epsilon*(dhi-cutoff*l);
         }
-        if ( dlo < cutoff*l ) p.f[k] += - 2.0*epsilon*(dlo-cutoff*l);
-        if ( dhi < cutoff*l ) p.f[k] -= - 2.0*epsilon*(dhi-cutoff*l);
       }
     }
 };
