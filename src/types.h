@@ -33,12 +33,19 @@ class Box {
     Box(array<dim> lo, array<dim> hi) : lo(lo), hi(hi) {};
 };
 
+class Constants {
+  public:
+    double const kb;            // Boltzmann constant
+    Constants(double kb) : kb(kb) {};
+};
+
 template<typename T, int dim=DIM>
 class System {
   public:
     T particles;
     Box<dim> box;
-    System(T &particles, Box<dim> &box) : particles(particles), box(box) {};
+    Constants constants;
+    System(T &particles, Box<dim> &box, Constants &constants) : particles(particles), box(box), constants(constants) {};
 };
 
 class Options {

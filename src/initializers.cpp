@@ -4,6 +4,9 @@
 
 // planet n-body problem
 System<vector<2>, 2> system_planets() {
+  // set constants
+  double const kb = 1.380649e-23;   // Boltzmann constant
+
   // initialize bounding box
   double lower = 0.0, upper = 1.0;    // unit sizes
   std::array<double, 2> lo, hi;
@@ -23,7 +26,8 @@ System<vector<2>, 2> system_planets() {
   p.push_back(p3);
   p.push_back(p4);
 
-  return System(p, b);
+  auto c = Constants(kb);
+  return System(p, b, c);
 }
 
 Options options_planets() {
@@ -73,7 +77,8 @@ System<vector<DIM>, DIM> system_helium() {
     p.push_back(pi);
   }
 
-  return System(p, b);
+  auto c = Constants(kb);
+  return System(p, b, c);
 }
 
 Options options_helium() {
