@@ -5,12 +5,18 @@
 #include "potentials.h"
 #include "fields.h"
 #include "boundaries.h"
+#include "thermostats.h"
 #include "statistics.h"
 #include "output.h"
 #include <vector>
 
-template<typename T, int dim=DIM>
-void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
+// template<typename T=ParticleList<DIM>, int dim=DIM>
+// void stroemer_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
+//   // integrate using the Stroemer Verlet scheme
+// }
+
+template<typename T=ParticleList<DIM>, int dim=DIM>
+void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
   // integrate using the velocity Verlet scheme
 
   print_header();               // table header for statistics output
@@ -30,19 +36,17 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
     update_forces(sys, pot, bound, field, opt);
     update_velocities(sys, opt.dt);
 
+    // apply thermostat
+    if ( i % thermostat.step == 0 ) thermostat.apply(sys);
+
     // print statistics to stdout and dump particle data to disk
     print_statistics(sys, i, t);
     if ( i % opt.freq == 0) dump(sys, opt, i);
   }
 }
 
-template<typename T, int dim=DIM>
-void stroemer_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
-  // integrate using the Stroemer Verlet scheme
-}
-
-template<typename T, int dim=DIM>
-void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
+template<typename T=ParticleList<DIM>, int dim=DIM>
+void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
   // integrate using the position Verlet scheme
 }
 

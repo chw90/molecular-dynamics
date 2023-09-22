@@ -7,6 +7,7 @@ set(SOURCES
   potentials.h
   fields.h
   boundaries.h
+  thermostats.h
   statistics.h
   output.h
   integrators.h
