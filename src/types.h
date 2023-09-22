@@ -5,34 +5,35 @@
 #include <array>
 #include <fstream>
 
+template<int dim=DIM>
 using array = std::array<double, dim>;
 
-template<int dim>
+template<int dim=DIM>
 class Particle {
   // stores particle data
   public:
     int type;                     // type ID
     double m;                     // mass
-    array x;                      // position
-    array v;                      // velocity
-    array f;                      // force
-    array buffer;                 // force buffer
-    Particle(int t, double m, array x, array v, array f, array buffer) : type(t), m(m), x(x), v(v), f(f), buffer(buffer) {};
+    array<dim> x;                      // position
+    array<dim> v;                      // velocity
+    array<dim> f;                      // force
+    array<dim> buffer;                 // force buffer
+    Particle(int t, double m, array<dim> x, array<dim> v, array<dim> f, array<dim> buffer) : type(t), m(m), x(x), v(v), f(f), buffer(buffer) {};
     Particle(int t, double m) : type(t), m(m) {
       x.fill(0.0); v.fill(0.0); f.fill(0.0); buffer.fill(0.0);
     }
 };
 
-template<int dim>
+template<int dim=DIM>
 class Box {
   public:
     // simulation box
-    array lo;                     // lower bounds
-    array hi;                     // upper bounds
-    Box(array lo, array hi) : lo(lo), hi(hi) {};
+    array<dim> lo;                     // lower bounds
+    array<dim> hi;                     // upper bounds
+    Box(array<dim> lo, array<dim> hi) : lo(lo), hi(hi) {};
 };
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 class System {
   public:
     T particles;
@@ -49,7 +50,7 @@ class Options {
     std::ofstream df;             // output dump file
     int freq;                     // output dump frequency
     Options(double dt, double ts, double te, int freq) : dt(dt), ts(ts), te(te), freq(freq) {
-      df.open(dump_file);
+      df.open(DUMP_FILE);
     };
 };
 

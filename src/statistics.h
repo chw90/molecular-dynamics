@@ -10,7 +10,7 @@ void print_header() {
   print("step", "time", "kinetic energy");
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void print_statistics(System<T, dim> &sys, int const &i, double const &t) {
   auto e_kin = kinetic_energy(sys.particles);
   print(i, t, e_kin);

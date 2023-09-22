@@ -4,10 +4,11 @@
 #include "types.h"
 #include <vector>
 
+template<int dim=DIM>
 using vector = std::vector<Particle<dim>>;
 
-System<vector, dim> system_planets();
-System<vector, dim> system_helium();
+System<vector<2>, 2> system_planets();
+System<vector<>, DIM> system_helium();
 
 Options options_planets();
 Options options_helium();

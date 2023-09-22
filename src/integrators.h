@@ -1,7 +1,6 @@
 #ifndef INTEGRATORS_H_
 #define INTEGRATORS_H_
 
-#include "parameters.h"
 #include "types.h"
 #include "potentials.h"
 #include "fields.h"
@@ -10,7 +9,7 @@
 #include "output.h"
 #include <vector>
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
   // integrate using the velocity Verlet scheme
 
@@ -37,22 +36,22 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
   }
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void stroemer_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
   // integrate using the Stroemer Verlet scheme
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
   // integrate using the position Verlet scheme
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
   // integrate using the leapfrog scheme
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void update_positions(System<T, dim> &sys, double const &delta_t) {
   // position update
   for ( auto &p: sys.particles ) {
@@ -63,7 +62,7 @@ void update_positions(System<T, dim> &sys, double const &delta_t) {
   }
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void update_velocities(System<T, dim> &sys, double const &delta_t) {
   // velocity update
   for ( auto &p: sys.particles ) {
@@ -73,7 +72,7 @@ void update_velocities(System<T, dim> &sys, double const &delta_t) {
   }
 }
 
-template<typename T, int dim>
+template<typename T, int dim=DIM>
 void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
   // evaluate field and boundary forces
   for ( auto &p: sys.particles ) {

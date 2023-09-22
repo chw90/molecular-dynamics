@@ -4,7 +4,7 @@
 #include "types.h"
 #include <cmath>
 
-template<int dim>
+template<int dim=DIM>
 double distance(Particle<dim> const &pi, Particle<dim> const &pj) {
   // compute the distance between two given particles
   double r = 0.0;
@@ -14,21 +14,21 @@ double distance(Particle<dim> const &pi, Particle<dim> const &pj) {
   return std::sqrt(r);
 }
 
-template<int dim>
+template<int dim=DIM>
 class Potential {
   // abstract base class for potentials
   public:
     virtual void evaluate(Particle<dim> &pi, Particle<dim> &pj) = 0;
 };
 
-template<int dim>
+template<int dim=DIM>
 class PotentialNone : public Potential<dim> {
   // no potential
   public:
     void evaluate(Particle<dim> &pi, Particle<dim> &pj) {};
 };
 
-template<int dim>
+template<int dim=DIM>
 class PotentialGravitation : public Potential<dim> {
   // gravitational potential
   double const gamma;           // gravitational constant
@@ -45,7 +45,7 @@ class PotentialGravitation : public Potential<dim> {
     };
 };
 
-template<int dim>
+template<int dim=DIM>
 class PotentialLJ : public Potential<dim> {
   // 12/6 Lennard-Jones potential
   double const sigma;
@@ -64,7 +64,7 @@ class PotentialLJ : public Potential<dim> {
     };
 };
 
-template<int dim>
+template<int dim=DIM>
 class PotentialMie : public Potential<dim> {
   // Mie potential
   double const n;

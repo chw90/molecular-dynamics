@@ -10,13 +10,13 @@ int main () {
   auto sys = system_helium();
 
   // set potential
-  auto pot = PotentialNone<dim>(); // PotentialGravitation<dim>(1.0);
+  auto pot = PotentialNone(); // PotentialGravitation(1.0);
 
   // set field
-  auto field = FieldNone<dim>(); // FieldGravity({9.81, 0.0})
+  auto field = FieldNone(); // FieldGravity({9.81, 0.0})
 
   // set boundary
-  auto boundary = BoundaryWallHarmonic<dim>(1.0, 5e-3); //
+  auto boundary = BoundaryWallHarmonic(1.0, 1e-2); //
 
   // initialize options
   auto opt = options_helium();

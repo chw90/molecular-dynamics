@@ -4,21 +4,21 @@
 #include "types.h"
 #include <stdexcept>
 
-template<int dim>
+template<int dim=DIM>
 class Boundary {
   // abstract base class for boundaries
   public:
     virtual void apply(Particle<dim> &p, Box<dim> b) = 0;
 };
 
-template<int dim>
+template<int dim=DIM>
 class BoundaryNone : public Boundary<dim> {
   // no boundary
   public:
     void apply(Particle<dim> &p, Box<dim> b) {};
 };
 
-template<int dim>
+template<int dim=DIM>
 class BoundaryWallHarmonic : public Boundary<dim> {
   // fixed walls with harmonic repulsive potential
   double const epsilon;         // scaling factor
