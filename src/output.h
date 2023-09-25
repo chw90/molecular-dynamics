@@ -35,12 +35,19 @@ void dump(System<T, dim> const &sys, Options &opt, unsigned const &step) {
     if constexpr ( dim == 2 ) opt.df << 0.0 << " " << 0.0 << " " << 0.0 << std::endl;
 
     // particle data
-    opt.df << "ITEM: ATOMS id type x y z" << std::endl;
+    opt.df << "ITEM: ATOMS id type x y z vx vy vz" << std::endl;
     int l = 0;
     for ( auto p: sys.particles) {
+        // particle ID and type
         opt.df << l << " " << p.type;
+        // position
         for ( int k = 0; k < dim; k++ ) {
             opt.df << " " << p.x[k];
+        }
+        if constexpr ( dim == 2 ) opt.df << " " << 0.0;
+        // velocity
+        for ( int k = 0; k < dim; k++ ) {
+            opt.df << " " << p.v[k];
         }
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
         opt.df << std::endl;
