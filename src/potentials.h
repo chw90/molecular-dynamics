@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include <cmath>
+#include <numbers>
 
 template<int dim=DIM>
 double distance(Particle<dim> const &pi, Particle<dim> const &pj) {
@@ -119,7 +120,25 @@ class PotentialBuckingham : public Potential<dim> {
     void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
       // compute pair forces
       auto r = distance(pi, pj);
-      auto prefactor = -a*b*std::exp(-b*r) + 6*c*std::pow(r, -7);
+      auto prefactor = -a*b/r*std::exp(-b*r) + 6*c*std::pow(r, -8);
+      for ( int k = 0; k < dim; k++ ) {
+        auto f = prefactor*(pj.x[k]-pi.x[k]);
+        pi.f[k] += f;
+        pj.f[k] -= f;
+      }
+    };
+};
+
+template<int dim=DIM>
+class PotentialCoulomb : public Potential<dim> {
+  // Buckingham potential
+  double const epsilon_0;       // dielectric constant
+  public:
+    PotentialCoulomb(double epsilon_0) : epsilon_0(epsilon_0) {};
+    void evaluate(ParticleCharged<dim> &pi, ParticleCharged<dim> &pj) {
+      // compute pair forces
+      auto r = distance(pi, pj);
+      auto prefactor = -1.0/(4*std::numbers::pi*epsilon_0)*pi.q*pj.q/std::pow(r, 3);
       for ( int k = 0; k < dim; k++ ) {
         auto f = prefactor*(pj.x[k]-pi.x[k]);
         pi.f[k] += f;
