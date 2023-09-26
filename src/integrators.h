@@ -26,18 +26,15 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
 
   dump(sys, opt, t);            // dump initial particle data to disk
 
-  update_forces(sys, pot, bound, field, opt);
+  update_forces(sys, pot, bound, field, tstat, opt, i);
   // iterate over timesteps
   while ( t < opt.te ) {
     i += 1;
     t += opt.dt;
 
     update_positions(sys, opt);
-    update_forces(sys, pot, bound, field, opt);
-    update_velocities(sys, opt);
-
-    // apply thermostat
-    if ( i % tstat.step == 0 ) tstat.apply(sys);
+    update_forces(sys, pot, bound, field, tstat, opt, i);
+    update_velocities(sys, tstat, opt, i);
 
     // print statistics to stdout and dump particle data to disk
     print_statistics(sys, i, t);
@@ -67,31 +64,39 @@ void update_positions(System<T, dim> &sys, Options const &opt) {
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void update_velocities(System<T, dim> &sys, Options const &opt) {
+void update_velocities(System<T, dim> &sys, Thermostat<T, dim> &tstat, Options const &opt, unsigned const &step) {
   // velocity update
   for ( auto &p: sys.particles ) {
     for ( int k = 0; k < dim; k++) {
       p.v[k] += 0.5*opt.dt/p.m * (p.f[k]+p.buffer[k]);
     }
   }
+  // apply thermostat
+  if ( step % tstat.step == 0) {
+    tstat.apply_velocities(sys);
+  }
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options const &opt) {
-  // evaluate field and boundary forces
+void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options const &opt, unsigned const &step) {
+  // reset forces
   for ( auto &p: sys.particles ) {
-    // reset forces
     p.f.fill(0.0);
-    // apply field
-    field.apply(p);
-    // apply boundary
-    bound.apply(p, sys.box);
   }
   // evaluate potential
   for ( auto i = sys.particles.begin(); i != sys.particles.end(); i++) {
     for ( auto j = i+1; j != sys.particles.end(); j++ ) {
       pot.evaluate(*i, *j);
     }
+  }
+  // apply thermostat
+  if ( step % tstat.step == 0) {
+    tstat.apply_forces(sys);
+  }
+  // apply field and boundary forces
+  for ( auto &p: sys.particles ) {
+    field.apply(p);
+    bound.apply(p, sys.box);
   }
 }
 

@@ -10,7 +10,8 @@ class Thermostat {
   // abstract base class for thermostats
   public:
     int const step = 1;         // apply thermostat every step steps
-    virtual void apply(System<T, dim> &sys) = 0;
+    virtual void apply_forces(System<T, dim> &sys) = 0;
+    virtual void apply_velocities(System<T, dim> &sys) = 0;
 };
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
@@ -19,7 +20,8 @@ class ThermostatNone : public Thermostat<T, dim> {
   public:
     int const step;
     ThermostatNone() : step(0) {};
-    void apply(System<T, dim> &sys) {};
+    void apply_forces(System<T, dim> &sys) {};
+    void apply_velocities(System<T, dim> &sys) {};
 };
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
@@ -29,7 +31,8 @@ class ThermostatWoodcock : public Thermostat<T, dim> {
   public:
     int const step;
     ThermostatWoodcock(double target, int step) : target(target), step(step) {};
-    void apply(System<T, dim> &sys) {
+    void apply_forces(System<T, dim> &sys) {};
+    void apply_velocities(System<T, dim> &sys) {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(target/temp);
       // modify velocities
@@ -48,10 +51,13 @@ class ThermostatBehrendsen : public Thermostat<T, dim> {
   double const damping;         // damping parameter
   public:
     int const step;
-    ThermostatBehrendsen(double target, double damping, int step) : target(target), damping(damping), step(step) {};
-    void apply(System<T, dim> &sys) {
+    ThermostatBehrendsen(double target, double damping, int step) :
+      target(target), damping(damping), step(step) {};
+    void apply_forces(System<T, dim> &sys) {};
+    void apply_velocities(System<T, dim> &sys) {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(1 + damping*(target/temp - 1));
+      // modify velocities
       for ( auto &p: sys.particles ) {
         for ( auto &vi: p.v ) {
           vi *= factor;
