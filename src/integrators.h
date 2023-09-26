@@ -16,7 +16,7 @@
 // }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
+void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
   // integrate using the velocity Verlet scheme
 
   print_header();               // table header for statistics output
@@ -32,12 +32,12 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
     i += 1;
     t += opt.dt;
 
-    update_positions(sys, opt.dt);
+    update_positions(sys, opt);
     update_forces(sys, pot, bound, field, opt);
-    update_velocities(sys, opt.dt);
+    update_velocities(sys, opt);
 
     // apply thermostat
-    if ( i % thermostat.step == 0 ) thermostat.apply(sys);
+    if ( i % tstat.step == 0 ) tstat.apply(sys);
 
     // print statistics to stdout and dump particle data to disk
     print_statistics(sys, i, t);
@@ -46,38 +46,38 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
+void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
   // integrate using the position Verlet scheme
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
+void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
   // integrate using the leapfrog scheme
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void update_positions(System<T, dim> &sys, double const &delta_t) {
+void update_positions(System<T, dim> &sys, Options const &opt) {
   // position update
   for ( auto &p: sys.particles ) {
     for ( int k = 0; k < dim; k++) {
-      p.x[k] += delta_t * (p.v[k] + 0.5*delta_t/p.m*p.f[k]);
+      p.x[k] += opt.dt * (p.v[k] + 0.5*opt.dt/p.m*p.f[k]);
       p.buffer[k] = p.f[k];     // buffer old forces
     }
   }
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void update_velocities(System<T, dim> &sys, double const &delta_t) {
+void update_velocities(System<T, dim> &sys, Options const &opt) {
   // velocity update
   for ( auto &p: sys.particles ) {
     for ( int k = 0; k < dim; k++) {
-      p.v[k] += 0.5*delta_t/p.m * (p.f[k]+p.buffer[k]);
+      p.v[k] += 0.5*opt.dt/p.m * (p.f[k]+p.buffer[k]);
     }
   }
 }
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
-void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options &opt) {
+void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Options const &opt) {
   // evaluate field and boundary forces
   for ( auto &p: sys.particles ) {
     // reset forces
