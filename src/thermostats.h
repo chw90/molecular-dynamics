@@ -23,6 +23,25 @@ class ThermostatNone : public Thermostat<T, dim> {
 };
 
 template<typename T=ParticleList<DIM>, int dim=DIM>
+class ThermostatWoodcock : public Thermostat<T, dim> {
+  // Behrendsen thermostat
+  double target;                // target temperature
+  public:
+    int const step;
+    ThermostatWoodcock(double target, int step) : target(target), step(step) {};
+    void apply(System<T, dim> &sys) {
+      auto temp = temperature(sys, kinetic_energy(sys));
+      auto factor = std::sqrt(target/temp);
+      // modify velocities
+      for ( auto &p: sys.particles ) {
+        for ( auto &vi: p.v ) {
+          vi *= factor;
+        }
+      }
+    }
+};
+
+template<typename T=ParticleList<DIM>, int dim=DIM>
 class ThermostatBehrendsen : public Thermostat<T, dim> {
   // Behrendsen thermostat
   double target;                // target temperature
