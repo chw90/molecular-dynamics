@@ -37,8 +37,9 @@ class PotentialGravitation : public Potential<dim> {
     void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
       // compute pair forces
       auto r = distance(pi, pj);
+      auto prefactor = gamma*pi.m*pj.m/std::pow(r, 3);
       for ( int k = 0; k < dim; k++ ) {
-        auto f = gamma*pi.m*pj.m/std::pow(r, 3)*(pj.x[k]-pi.x[k]);
+        auto f = prefactor*(pj.x[k]-pi.x[k]);
         pi.f[k] += f;
         pj.f[k] -= f;
       };
@@ -56,8 +57,9 @@ class PotentialLJ : public Potential<dim> {
       // compute pair forces
       auto r = distance(pi, pj);
       auto s = std::pow(sigma/r, 6);
+      auto prefactor = 24.0*epsilon*s/r*(1.0-2.0*s);
       for ( int k = 0; k < dim; k++ ) {
-        auto f = 24.0*epsilon*s/r*(1.0-2.0*s)*(pj.x[k]-pi.x[k]);
+        auto f = prefactor*(pj.x[k]-pi.x[k]);
         pi.f[k] += f;
         pj.f[k] -= f;
       }
@@ -76,14 +78,56 @@ class PotentialMie : public Potential<dim> {
     void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
       // compute pair forces
       auto r = distance(pi, pj);
+      auto prefactor = n*cn*std::pow(r, -n-2) + m*cm*std::pow(r, m-2);
       for ( int k = 0; k < dim; k++ ) {
-        auto f = (n*cn*std::pow(r, -n-2) + m*cm*std::pow(r, m-2))*(pj.x[k]-pi.x[k]);
+        auto f = prefactor*(pj.x[k]-pi.x[k]);
         pi.f[k] += f;
         pj.f[k] -= f;
       }
     };
 };
 
-// TODO: Buckingham potential, Coulomb potential
+template<int dim=DIM>
+class PotentialMorse : public Potential<dim> {
+  // Morse potential
+  double const de;
+  double const a;
+  double const re;
+  public:
+    PotentialMorse(double de, double a, double re) : de(de), a(a), re(re) {};
+    void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute pair forces
+      auto r = distance(pi, pj);
+      auto e = std::exp(-a*(r-re));
+      auto prefactor = 2.0*a*de/r*e*(1.0-e);
+      for ( int k = 0; k < dim; k++ ) {
+        auto f = prefactor*(pj.x[k]-pi.x[k]);
+        pi.f[k] += f;
+        pj.f[k] -= f;
+      }
+    };
+};
+
+template<int dim=DIM>
+class PotentialBuckingham : public Potential<dim> {
+  // Buckingham potential
+  double const a;
+  double const b;
+  double const c;
+  public:
+    PotentialBuckingham(double a, double b, double c) : a(a), b(b), c(c) {};
+    void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute pair forces
+      auto r = distance(pi, pj);
+      auto prefactor = -a*b*std::exp(-b*r) + 6*c*std::pow(r, -7);
+      for ( int k = 0; k < dim; k++ ) {
+        auto f = prefactor*(pj.x[k]-pi.x[k]);
+        pi.f[k] += f;
+        pj.f[k] -= f;
+      }
+    };
+};
+
+// TODO: Coulomb potential
 
 #endif // POTENTIALS_H_
