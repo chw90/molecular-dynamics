@@ -19,7 +19,7 @@ void print(T const &arg, const TS&... args) {
     print(args...);
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void dump(System<T, dim> const &sys, Options &opt, unsigned const &step) {
 
     // timestep header

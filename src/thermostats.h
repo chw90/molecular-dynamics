@@ -5,8 +5,9 @@
 #include "types.h"
 #include "statistics.h"
 #include <cmath>
+#include <random>
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 class Thermostat {
   // abstract base class for thermostats
   public:
@@ -15,7 +16,7 @@ class Thermostat {
     virtual void apply_velocities(System<T, dim> &sys) = 0;
 };
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 class ThermostatNone : public Thermostat<T, dim> {
   // no thermostat
   public:
@@ -25,10 +26,10 @@ class ThermostatNone : public Thermostat<T, dim> {
     void apply_velocities(System<T, dim> &sys) {};
 };
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 class ThermostatWoodcock : public Thermostat<T, dim> {
   // Behrendsen thermostat
-  double target;                // target temperature
+  double const target;          // target temperature
   public:
     int const step;
     ThermostatWoodcock(double target, int step) : target(target), step(step) {};
@@ -45,10 +46,10 @@ class ThermostatWoodcock : public Thermostat<T, dim> {
     }
 };
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 class ThermostatBehrendsen : public Thermostat<T, dim> {
   // Behrendsen thermostat
-  double target;                // target temperature
+  double const target;          // target temperature
   double const damping;         // damping parameter
   public:
     int const step;
@@ -67,7 +68,7 @@ class ThermostatBehrendsen : public Thermostat<T, dim> {
     }
 };
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 class ThermostatGauss : public Thermostat<T, dim> {
   // Gauss thermostat
   public:

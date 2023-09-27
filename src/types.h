@@ -36,7 +36,7 @@ class ParticleCharged : public Particle<dim> {
 };
 
 template<int dim=DIM>
-using ParticleList = std::vector<Particle<dim>>;
+using ParticleVector = std::vector<Particle<dim>>;
 
 template<int dim=DIM>
 class Box {
@@ -53,7 +53,7 @@ class Constants {
     Constants(double kb) : kb(kb) {};
 };
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 class System {
   public:
     T particles;

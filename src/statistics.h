@@ -11,14 +11,14 @@ void print_header() {
   print("step", "time", "kinetic energy", "temperature");
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void print_statistics(System<T, dim> &sys, int const &i, double const &t) {
   auto e_kin = kinetic_energy(sys);
   auto temp = temperature(sys, e_kin);
   print(i, t, e_kin, temp);
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 double kinetic_energy(System<T, dim> &sys) {
   double e_kin = 0.0;
   for ( auto p: sys.particles) {
@@ -29,7 +29,7 @@ double kinetic_energy(System<T, dim> &sys) {
   return e_kin;
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 double temperature(System<T, dim> &sys, double const e_kin) {
   return 2.0/(dim*sys.constants.kb*sys.particles.size())*e_kin;
 }

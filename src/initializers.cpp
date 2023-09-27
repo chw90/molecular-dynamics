@@ -1,8 +1,9 @@
 #include "initializers.h"
 #include <cmath>
+#include <random>
 
 // planet n-body problem
-System<ParticleList<2>, 2> system_planets() {
+System<ParticleVector<2>, 2> system_planets() {
   // set constants
   double const kb = 1.380649e-23;   // Boltzmann constant
 
@@ -14,7 +15,7 @@ System<ParticleList<2>, 2> system_planets() {
   auto b = Box<2>(lo, hi);
 
   // initialize particles
-  ParticleList<2> p;
+  ParticleVector<2> p;
   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // sun
   auto p2 = Particle<2>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // earth
   auto p3 = Particle<2>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // jupiter
@@ -43,7 +44,7 @@ Options options_planets() {
 }
 
 // helium gas problem
-System<ParticleList<DIM>, DIM> system_helium() {
+System<ParticleVector<DIM>, DIM> system_helium() {
   // set constants
   double const kb = 1.380649e-23;   // Boltzmann constant
   double const m = 6.646476406e-27; // mass
@@ -62,10 +63,10 @@ System<ParticleList<DIM>, DIM> system_helium() {
   // initialize particles with Maxwell-Boltzmann distributed velocity magnitudes
   auto separation = 1e-2*(upper-lower); // initial minimum distance of particles to box bounds
   auto standard_deviation = std::sqrt(kb*T/m);
-  std::default_random_engine reng(rdev());
-  std::uniform_real_distribution position_component(lower+separation, upper-separation);
-  std::normal_distribution velocity_component(0.0, standard_deviation);
-  ParticleList<DIM> p;
+  auto &reng = RandomGenerator::engine;
+  std::uniform_real_distribution<double> position_component(lower+separation, upper-separation);
+  std::normal_distribution<double> velocity_component(0.0, standard_deviation);
+  ParticleVector<DIM> p;
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<DIM>(1, m);
     for ( int k = 0; k < DIM; k++ ) {

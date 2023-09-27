@@ -11,12 +11,12 @@
 #include "output.h"
 #include <vector>
 
-// template<typename T=ParticleList<DIM>, int dim=DIM>
+// template<typename T=ParticleVector<DIM>, int dim=DIM>
 // void stroemer_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
 //   // integrate using the Stroemer Verlet scheme
 // }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
   // integrate using the velocity Verlet scheme
 
@@ -43,17 +43,17 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
   }
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
   // integrate using the position Verlet scheme
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
   // integrate using the leapfrog scheme
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void update_positions(System<T, dim> &sys, Options const &opt) {
   // position update
   for ( auto &p: sys.particles ) {
@@ -64,7 +64,7 @@ void update_positions(System<T, dim> &sys, Options const &opt) {
   }
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void update_velocities(System<T, dim> &sys, Thermostat<T, dim> &tstat, Options const &opt, unsigned const &step) {
   // velocity update
   for ( auto &p: sys.particles ) {
@@ -78,7 +78,7 @@ void update_velocities(System<T, dim> &sys, Thermostat<T, dim> &tstat, Options c
   }
 }
 
-template<typename T=ParticleList<DIM>, int dim=DIM>
+template<typename T=ParticleVector<DIM>, int dim=DIM>
 void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options const &opt, unsigned const &step) {
   // reset forces
   for ( auto &p: sys.particles ) {

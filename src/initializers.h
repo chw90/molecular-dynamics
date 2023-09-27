@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "types.h"
 
-System<ParticleList<2>, 2> system_planets();
+System<ParticleVector<2>, 2> system_planets();
 System<> system_helium();
 
 Options options_planets();
