@@ -1,6 +1,7 @@
 #ifndef BOUNDARIES_H_
 #define BOUNDARIES_H_
 
+#include "globals.h"
 #include "types.h"
 #include <stdexcept>
 

@@ -1,6 +1,7 @@
 #ifndef INTEGRATORS_H_
 #define INTEGRATORS_H_
 
+#include "globals.h"
 #include "types.h"
 #include "potentials.h"
 #include "fields.h"

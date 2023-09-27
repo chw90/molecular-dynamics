@@ -1,6 +1,7 @@
 #ifndef FIELDS_H_
 #define FIELDS_H_
 
+#include "globals.h"
 #include "types.h"
 
 template<int dim=DIM>

@@ -1,6 +1,7 @@
 #ifndef INITIALIZE_H_
 #define INITIALIZE_H_
 
+#include "globals.h"
 #include "types.h"
 
 System<ParticleList<2>, 2> system_planets();

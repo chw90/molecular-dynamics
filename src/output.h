@@ -1,6 +1,7 @@
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
+#include "globals.h"
 #include "types.h"
 #include <iostream>
 #include <iomanip>

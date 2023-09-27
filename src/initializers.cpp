@@ -1,6 +1,5 @@
 #include "initializers.h"
 #include <cmath>
-#include <random>
 
 // planet n-body problem
 System<ParticleList<2>, 2> system_planets() {
@@ -63,7 +62,6 @@ System<ParticleList<DIM>, DIM> system_helium() {
   // initialize particles with Maxwell-Boltzmann distributed velocity magnitudes
   auto separation = 1e-2*(upper-lower); // initial minimum distance of particles to box bounds
   auto standard_deviation = std::sqrt(kb*T/m);
-  std::random_device rdev;
   std::default_random_engine reng(rdev());
   std::uniform_real_distribution position_component(lower+separation, upper-separation);
   std::normal_distribution velocity_component(0.0, standard_deviation);

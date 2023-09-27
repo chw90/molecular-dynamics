@@ -1,7 +1,7 @@
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 set(SOURCES
-  parameters.h
+  globals.cpp
   types.h
   initializers.cpp
   potentials.h

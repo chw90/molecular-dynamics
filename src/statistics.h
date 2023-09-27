@@ -1,6 +1,7 @@
 #ifndef STATISTICS_H_
 #define STATISTICS_H_
 
+#include "globals.h"
 #include "output.h"
 #include <cmath>
 #include <iostream>

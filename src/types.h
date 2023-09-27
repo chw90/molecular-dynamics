@@ -1,7 +1,7 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
-#include "parameters.h"
+#include "globals.h"
 #include <array>
 #include <vector>
 #include <fstream>
