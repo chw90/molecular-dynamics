@@ -100,4 +100,36 @@ class ThermostatGauss : public Thermostat<T, dim> {
     void apply_velocities(System<T, dim> &sys) {};
 };
 
+template<typename T=ParticleVector<DIM>, int dim=DIM>
+class ThermostatAndersen : public Thermostat<T, dim> {
+  // Andersen thermostat
+  double const target;          // target temperature
+  double const mass;            // mass of the particles
+  double const kb;              // Boltzmann constant
+  double const coupling;        // fraction of particles to modify per invocation
+  double stddev;                // standard deviation for velocity components
+  std::normal_distribution<double> vc; // random number generator for velocity components
+  public:
+    int const step;
+    ThermostatAndersen(double target, double mass, double kb, double coupling, double step) :
+      target(target), mass(mass), kb(kb), coupling(coupling), step(step) {
+      stddev = std::sqrt(kb*target/mass);
+      vc = std::normal_distribution<double>(0.0, stddev);
+    };
+    void apply_forces(System<T, dim> &sys) {};
+    void apply_velocities(System<T, dim> &sys) {
+      // determine number of particles to modify
+      std::uniform_int_distribution<size_t> index(0, sys.particles.size());
+      auto np = std::floor(coupling*sys.particles.size());
+      for ( int i = 0; i < np; i++ ) {
+        // pick random particle
+        auto &p = sys.particles[index(RandomGenerator::engine)];
+        for ( int k = 0; k < dim; k++ ) {
+          // override velocity component
+          p.v[k] = vc(RandomGenerator::engine);
+        }
+      }
+    };
+};
+
 #endif // THERMOSTATS_H_
