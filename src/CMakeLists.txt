@@ -3,6 +3,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(SOURCES
   globals.cpp
   types.h
+  test_container.cpp
   initializers.cpp
   potentials.h
   fields.h
