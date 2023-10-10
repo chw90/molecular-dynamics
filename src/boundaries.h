@@ -42,5 +42,4 @@ class BoundaryWallHarmonic : public Boundary<dim> {
     }
 };
 
-
 #endif // BOUNDARIES_H_

@@ -18,7 +18,7 @@ class Thermostat {
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
 class ThermostatNone : public Thermostat<T, dim> {
-  // no thermostat
+  // no thermostatting
   public:
     int const step;
     ThermostatNone() : step(0) {};
@@ -28,7 +28,7 @@ class ThermostatNone : public Thermostat<T, dim> {
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
 class ThermostatWoodcock : public Thermostat<T, dim> {
-  // Behrendsen thermostat
+  // Woodcock thermostat
   double const target;          // target temperature
   public:
     int const step;
