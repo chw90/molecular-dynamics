@@ -7,17 +7,18 @@
 #include "fields.h"
 #include "boundaries.h"
 #include "thermostats.h"
+#include "barostats.h"
 #include "statistics.h"
 #include "output.h"
 #include <vector>
 
 // template<typename T=ParticleVector<DIM>, int dim=DIM>
-// void stroemer_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Options &opt) {
+// void stroemer_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &thermostat, Barostat<T, dim> &bstat, Options &opt) {
 //   // integrate using the Stroemer Verlet scheme
 // }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
+void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
   // integrate using the velocity Verlet scheme
 
   print_header();               // table header for statistics output
@@ -33,7 +34,7 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
     i += 1;
     t += opt.dt;
 
-    update_positions(sys, opt);
+    update_positions(sys, bstat, opt, i);
     update_forces(sys, pot, bound, field, tstat, opt, i);
     update_velocities(sys, tstat, opt, i);
 
@@ -44,23 +45,27 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
 }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
+void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
   // integrate using the position Verlet scheme
 }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options &opt) {
+void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
   // integrate using the leapfrog scheme
 }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void update_positions(System<T, dim> &sys, Options const &opt) {
+void update_positions(System<T, dim> &sys, Barostat<T, dim> &bstat, Options const &opt, unsigned const &step) {
   // position update
   for ( auto &p: sys.particles ) {
     for ( int k = 0; k < dim; k++) {
       p.x[k] += opt.dt * (p.v[k] + 0.5*opt.dt/p.m*p.f[k]);
       p.buffer[k] = p.f[k];     // buffer old forces
     }
+  }
+  // apply barostat
+  if ( step % bstat.step == 0 ) {
+    bstat.apply(sys, opt);
   }
 }
 

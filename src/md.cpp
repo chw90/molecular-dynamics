@@ -3,6 +3,7 @@
 #include "fields.h"
 #include "boundaries.h"
 #include "thermostats.h"
+#include "barostats.h"
 #include "integrators.h"
 
 int main () {
@@ -30,9 +31,12 @@ int main () {
   // auto thermostat = ThermostatNone();
   auto thermostat = ThermostatBehrendsen(315.0, 0.5, 10);
 
+  // set barostat
+  // auto barostat = BarostatNone();
+  auto barostat = BarostatBehrendsen(2e-3, 10.0, 50*opt.dt, 1);
 
   // run
-  velocity_verlet(sys, potential, boundary, field, thermostat, opt);
+  velocity_verlet(sys, potential, boundary, field, thermostat, barostat, opt);
 
   return 0;
 }
