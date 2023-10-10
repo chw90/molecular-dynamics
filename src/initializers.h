@@ -5,9 +5,9 @@
 #include "types.h"
 
 System<ParticleVector<2>, 2> system_planets();
-System<> system_helium();
+System<> system_xenon();
 
 Options options_planets();
-Options options_helium();
+Options options_xenon();
 
 #endif // INITIALIZE_H_

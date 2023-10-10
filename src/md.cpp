@@ -8,12 +8,15 @@
 int main () {
 
   // initialize system
-  auto sys = system_helium();
+  auto sys = system_xenon();
+
+  // initialize options
+  auto opt = options_xenon();
 
   // set potential
   auto potential = PotentialNone();
   // auto potential = PotentialGravitation(1.0);
-  // auto potential = PotentialLJ(0.25238e-9, 9.8725*sys.constants.kb);
+  // auto potential = PotentialLJ(0.394e-9, 3.204353268e-21);
 
   // set field
   auto field = FieldNone();
@@ -27,8 +30,6 @@ int main () {
   // auto thermostat = ThermostatNone();
   auto thermostat = ThermostatBehrendsen(315.0, 0.5, 10);
 
-  // initialize options
-  auto opt = options_helium();
 
   // run
   velocity_verlet(sys, potential, boundary, field, thermostat, opt);

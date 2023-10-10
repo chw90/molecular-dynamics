@@ -43,18 +43,18 @@ Options options_planets() {
   return Options(dt, ts, te, freq);
 }
 
-// helium gas problem
-System<ParticleVector<DIM>, DIM> system_helium() {
+// xenon gas problem
+System<ParticleVector<DIM>, DIM> system_xenon() {
   // set constants
-  double const kb = 1.380649e-23;   // Boltzmann constant
-  double const m = 6.646476406e-27; // mass
-  double const T = 293.15;          // initial temperature
-  double const P = 1e5;             // initial pressure
-  int const N = std::pow(10, DIM);  // number of particles
+  double const kb = 1.380649e-23;         // Boltzmann constant
+  double const m = 2.180171556711138e-25; // mass
+  double const T = 293.15;                // initial temperature
+  double const P = 1e5;                   // initial pressure
+  int const N = std::pow(9, DIM);         // number of particles
 
   // initialize bounding box
   double const lower = 0.0;
-  auto const upper = std::pow(N*kb*T/P, 1.0/DIM); // box edge length
+  auto const upper = std::pow(N*kb*T/P, 1.0/3.0); // box edge length
   std::array<double, DIM> lo, hi;
   lo.fill(lower);
   hi.fill(upper);
@@ -80,14 +80,14 @@ System<ParticleVector<DIM>, DIM> system_helium() {
   return System(p, b, c);
 }
 
-Options options_helium() {
+Options options_xenon() {
   // set time stepping options
   double dt = 5e-14;
   double ts = 0.0;
-  double te = 500*dt;
+  double te = 5000*dt;
 
   // set output options
-  int freq = 5;
+  int freq = 10;
 
   // construct options
   return Options(dt, ts, te, freq);
