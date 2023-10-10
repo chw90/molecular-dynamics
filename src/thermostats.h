@@ -12,8 +12,8 @@ class Thermostat {
   // abstract base class for thermostats
   public:
     int const step = 1;         // apply thermostat every step steps
-    virtual void apply_forces(System<T, dim> &sys) = 0;
-    virtual void apply_velocities(System<T, dim> &sys) = 0;
+    virtual void apply_forces(System<T, dim> &sys) = 0; // apply via forces
+    virtual void apply_velocities(System<T, dim> &sys) = 0; // apply via velocity modification
 };
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>

@@ -11,7 +11,7 @@ class Barostat {
   // abstract base class for barostats
   public:
     int const step = 1;         // apply thermostat every step steps
-    virtual void apply(System<T, dim> &sys, Options const &opt) = 0;
+    virtual void apply(System<T, dim> &sys, Options const &opt) = 0; // apply via general system modification
 };
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
