@@ -18,7 +18,7 @@
 // }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
+void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<T, dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
   // integrate using the velocity Verlet scheme
 
   print_header();               // table header for statistics output
@@ -35,6 +35,7 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
     t += opt.dt;
 
     update_positions(sys, bstat, opt, i);
+    bound.apply(sys);
     update_forces(sys, pot, bound, field, tstat, opt, i);
     update_velocities(sys, tstat, opt, i);
 
@@ -45,12 +46,12 @@ void velocity_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bo
 }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
+void position_verlet(System<T, dim> &sys, Potential<dim> &pot, Boundary<T, dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
   // integrate using the position Verlet scheme
 }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
+void leapfrog(System<T, dim> &sys, Potential<dim> &pot, Boundary<T, dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Barostat<T, dim> &bstat, Options &opt) {
   // integrate using the leapfrog scheme
 }
 
@@ -84,7 +85,7 @@ void update_velocities(System<T, dim> &sys, Thermostat<T, dim> &tstat, Options c
 }
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
-void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options const &opt, unsigned const &step) {
+void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<T, dim> &bound, Field<dim> &field, Thermostat<T, dim> &tstat, Options const &opt, unsigned const &step) {
   // reset forces
   for ( auto &p: sys.particles ) {
     p.f.fill(0.0);
@@ -102,7 +103,7 @@ void update_forces(System<T, dim> &sys, Potential<dim> &pot, Boundary<dim> &boun
   // apply field and boundary forces
   for ( auto &p: sys.particles ) {
     field.apply(p);
-    bound.apply(p, sys.box);
+    bound.apply_forces(p, sys.box);
   }
 }
 
