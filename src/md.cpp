@@ -9,15 +9,15 @@
 int main () {
 
   // initialize system
-  auto sys = system_xenon();
+  auto system = system_xenon();
 
   // initialize options
-  auto opt = options_xenon();
+  auto options = options_xenon();
 
   // set potential
-  auto potential = PotentialNone();
+  // auto potential = PotentialNone();
   // auto potential = PotentialGravitation(1.0);
-  // auto potential = PotentialLJ(0.394e-9, 3.204353268e-21);
+  auto potential = PotentialLJ(0.394e-9, 3.204353268e-21);
 
   // set field
   auto field = FieldNone();
@@ -25,15 +25,20 @@ int main () {
 
   // set boundary
   // auto boundary = BoundaryNone();
-  auto boundary = BoundaryWallHarmonic(1.0, 1e-2); //
+  // auto boundary = BoundaryWallHarmonic(1.0, 1e-2); //
+  auto boundary = BoundaryWallReflect(1e-2);
 
   // set thermostat
-  // auto thermostat = ThermostatNone();
-  auto thermostat = ThermostatBehrendsen(315.0, 0.5, 10);
+  auto thermostat = ThermostatNone();
+  // auto thermostat = ThermostatWoodcock(325.0, 10);
+  // auto thermostat = ThermostatBehrendsen(325.0, 0.5, 10);
+  // auto thermostat = ThermostatGauss(1);
+  // auto thermostat = ThermostatAndersen(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
 
   // set barostat
-  // auto barostat = BarostatNone();
-  auto barostat = BarostatBehrendsen(2e-3, 10.0, 50*opt.dt, 1);
+  auto barostat = BarostatNone();
+  // auto barostat = BarostatBehrendsen(2e-3, 30.0, 20*opt.dt, 1);
+
   // set integrator
   auto integrator = IntegratorVelocityVerlet(potential, boundary, field, thermostat, barostat);
 
