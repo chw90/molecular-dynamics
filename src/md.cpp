@@ -34,9 +34,11 @@ int main () {
   // set barostat
   // auto barostat = BarostatNone();
   auto barostat = BarostatBehrendsen(2e-3, 10.0, 50*opt.dt, 1);
+  // set integrator
+  auto integrator = IntegratorVelocityVerlet(potential, boundary, field, thermostat, barostat);
 
-  // run
-  velocity_verlet(sys, potential, boundary, field, thermostat, barostat, opt);
+  // run simulation
+  integrator.run(system, options);
 
   return 0;
 }
