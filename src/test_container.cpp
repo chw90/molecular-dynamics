@@ -3,12 +3,16 @@
 #include <iostream>
 
 template<int dim=DIM>
-void print_mass(Particle<dim> p) {
-    std::cout << p.m << std::endl;
+void print_particle(Particle<dim> p) {
+    std::cout << "m: " << p.m << " x: ";
+    for ( auto &xi: p.x ) {
+      std::cout << xi << " ";
+    }
+    std::cout << std::endl;
 }
 
 template<int dim=DIM>
-void print_masses(Particle<dim> pi, Particle<dim> pj) {
+void print_pair(Particle<dim> pi, Particle<dim> pj) {
     std::cout << "i: " << pi.m << " j " << pj.m << std::endl;
 }
 
@@ -26,10 +30,10 @@ void test_ContainerVector() {
   std::cout << particles.size() << std::endl;
 
   std::cout << "map:" << std::endl;
-  particles.map(print_mass<>);
+  particles.map(print_particle<>);
 
   std::cout << "map_pairwise:" << std::endl;
-  particles.map_pairwise(print_masses<>);
+  particles.map_pairwise(print_pair<>);
 }
 
 void test_ContainerCells2D() {
@@ -55,10 +59,10 @@ void test_ContainerCells2D() {
   particles.neighbor_build(b);
 
   std::cout << "map:" << std::endl;
-  particles.map(print_mass<>);
+  particles.map(print_particle<>);
 
   std::cout << "map_pairwise:" << std::endl;
-  particles.map_pairwise(print_masses<>);
+  particles.map_pairwise(print_pair<>);
 }
 
 template void test_ContainerCells<2>();
@@ -76,9 +80,15 @@ void test_ContainerCells() {
   hi.fill(upper);
   auto b = Box<dim>(lo, hi);
 
-  std::uniform_real_distribution<double> x(lower, upper);
+  // auto p0 = Particle<3>(0, 0.0, {0.7, 0.3, 0.3}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
+  // auto p1 = Particle<3>(1, 1.0, {0.7, 0.3, 0.3}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
+  // auto p2 = Particle<3>(2, 2.0, {0.7, 0.7, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
+  // auto p3 = Particle<3>(3, 3.0, {0.3, 0.7, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
+  // auto p4 = Particle<3>(4, 4.0, {0.7, 0.3, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
 
   auto particles = ContainerCells<dim>(b, 0.4);
+
+  std::uniform_real_distribution<double> x(lower, upper);
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<dim>(1, i);
     for ( int k = 0; k < dim; k++ ) {
@@ -87,12 +97,25 @@ void test_ContainerCells() {
     particles.insert(pi);
   }
 
+  // particles.insert(p0);
+  // particles.insert(p1);
+  // particles.insert(p2);
+  // particles.insert(p3);
+  // particles.insert(p4);
+
   particles.neighbor_build(b);
 
+  std::cout << "size: " << particles.data.num_elements() << std::endl;
+  std::cout << "shape: ";
+  for ( size_t i =  0; i < particles.data.num_dimensions(); i++ ) {
+    std::cout << particles.data.shape()[i] << " ";
+  }
+  std::cout << std::endl;
+
   std::cout << "map:" << std::endl;
-  particles.map(print_mass<dim>);
+  particles.map(print_particle<dim>);
 
   std::cout << "map_pairwise:" << std::endl;
-  particles.map_pairwise(print_masses<dim>);
+  particles.map_pairwise(print_pair<dim>);
 
 }

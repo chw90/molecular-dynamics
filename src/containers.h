@@ -166,34 +166,23 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
         for ( int ai = 0; ai < nc[0]; ai++ ) {
           for ( int aj = 0; aj < nc[1]; aj++ ) {
             auto &a = data[ai][aj];
-            // stencil sweep over cell array
-            for ( int bi = ai; bi <= ai+1 && bi < nc[0]; bi++ ) {
-              for ( int bj = aj; bj <= aj+1 && bj < nc[1]; bj++) {
-                auto &b = data[bi][bj];
-                if ( ai == bi && aj == bj ) {
-                  // pairs within same cell
-                  for ( auto pi = a.begin(); pi != a.end(); pi++) {
-                    for ( auto pj = std::next(pi); pj != a.end(); pj++ ) {
-                      f(*pi, *pj);
-                    }
-                  }
-                } else {
-                  // pairs with neighbors bi >= ai, bj >= aj
-                  for ( auto pi = a.begin(); pi != a.end(); pi++ ) {
-                    for ( auto pj = b.begin(); pj != b.end(); pj++ ) {
-                      f(*pi, *pj);
-                    }
+            if ( ! a.empty() ) {
+              // stencil sweep over cell array
+              for ( int bi = ai; bi <= ai+1 && bi < nc[0]; bi++ ) {
+                for ( int bj = aj; bj <= aj+1 && bj < nc[1]; bj++) {
+                  auto &b = data[bi][bj];
+                  if ( ai == bi && aj == bj ) {
+                    pair_intra_cell(a, f);
+                  } else {
+                    // pairs with neighbors bi >= ai, bj >= aj
+                    pair_inter_cell(a, b, f);
                   }
                 }
               }
-            }
-            // pairs with neighbor bi = ai-1, bj = aj+1
-            if ( ai-1 >= 0 && aj + 1 < nc[1] ) {
-              auto &b = data[ai-1][aj+1];
-              for ( auto pi = a.begin(); pi != a.end(); pi++ ) {
-                for ( auto pj = b.begin(); pj != b.end(); pj++ ) {
-                  f(*pi, *pj);
-                }
+              // pairs with neighbor bi = ai-1, bj = aj+1
+              if ( ai-1 >= 0 && aj + 1 < nc[1] ) {
+                auto &b = data[ai-1][aj+1];
+                pair_inter_cell(a, b, f);
               }
             }
           }
@@ -205,45 +194,33 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
           for ( int aj = 0; aj < nc[1]; aj++ ) {
             for ( int ak = 0; ak < nc[2]; ak++ ) {
               auto &a = data[ai][aj][ak];
-              // stencil sweep over cell array
-              for ( int bi = ai; bi <= ai+1 && bi < nc[0]; bi++ ) {
-                for ( int bj = aj; bj <= aj+1 && bj < nc[1]; bj++) {
-                  auto &b = data[bi][bj][ak];
-                  if ( ai == bi && aj == bj ) {
-                    // pairs within same cell
-                    for ( auto pi = a.begin(); pi != a.end(); pi++) {
-                      for ( auto pj = std::next(pi); pj != a.end(); pj++ ) {
-                        f(*pi, *pj);
-                      }
-                    }
-                  } else {
-                    // pairs with neighbors bi >= ai, bj >= aj, bk = ak
-                    for ( auto pi = a.begin(); pi != a.end(); pi++ ) {
-                      for ( auto pj = b.begin(); pj != b.end(); pj++ ) {
-                        f(*pi, *pj);
-                      }
+              if ( ! a.empty() ) {
+                // stencil sweep over cell array
+                for ( int bi = ai; bi <= ai+1 && bi < nc[0]; bi++ ) {
+                  for ( int bj = aj; bj <= aj+1 && bj < nc[1]; bj++) {
+                    auto &b = data[bi][bj][ak];
+                    if ( ai == bi && aj == bj ) {
+                      // pairs within same cell
+                      pair_intra_cell(a, f);
+                    } else {
+                      // pairs with neighbors bi >= ai, bj >= aj, bk = ak
+                      pair_inter_cell(a, b, f);
                     }
                   }
                 }
-              }
-              // pairs with neighbor bi = ai-1, bj = aj+1, bk = ak
-              if ( ai-1 >= 0 && aj + 1 < nc[1] ) {
-                auto &b = data[ai-1][aj+1][ak];
-                for ( auto pi = a.begin(); pi != a.end(); pi++ ) {
-                  for ( auto pj = b.begin(); pj != b.end(); pj++ ) {
-                    f(*pi, *pj);
-                  }
+                // pairs with neighbor bi = ai-1, bj = aj+1, bk = ak
+                if ( ai-1 >= 0 && aj + 1 < nc[1] ) {
+                  auto &b = data[ai-1][aj+1][ak];
+                  pair_inter_cell(a, b, f);
                 }
-              }
-              if ( ak+1 < nc[2] ) {
-                // pairs with neighbors ai-1 <= bi <= ai+1, aj-1 <= bj <= bj+1, bk = ak+1
-                for ( int bi = ai-1; bi >= 0 && bi <= ai+1 && bi < nc[0]; bi++ ) {
-                  for ( int bj = aj-1; bj >= 0 && bj <= aj+1 && bj < nc[1]; bj++) {
-                    auto &b = data[bi][bj][ak+1];
-                    for ( auto pi = a.begin(); pi != a.end(); pi++ ) {
-                      for ( auto pj = b.begin(); pj != b.end(); pj++ ) {
-                        f(*pi, *pj);
-                      }
+                if ( ak+1 < nc[2] ) {
+                  // pairs with neighbors ai-1 <= bi <= ai+1, aj-1 <= bj <= bj+1, bk = ak+1
+                  for ( int bi = ai-1; bi <= ai+1 && bi < nc[0]; bi++ ) {
+                    if ( bi < 0 ) continue;
+                    for ( int bj = aj-1; bj <= aj+1 && bj < nc[1]; bj++) {
+                      if ( bj < 0 ) continue;
+                      auto &b = data[bi][bj][ak+1];
+                      pair_inter_cell(a, b, f);
                     }
                   }
                 }
@@ -290,9 +267,28 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
       }
       return in_box;
     }
+    template<typename F>
+    void pair_intra_cell(Cell<dim> &a, F f) {
+      for ( auto pi = a.begin(); pi != a.end(); pi++) {
+        for ( auto pj = std::next(pi); pj != a.end(); pj++ ) {
+          f(*pi, *pj);
+        }
+      }
+    }
+    template<typename F>
+    void pair_inter_cell(Cell<dim> &a, Cell<dim> &b, F f) {
+      if ( ! b.empty() ) {
+        for ( auto pi = a.begin(); pi != a.end(); pi++ ) {
+          for ( auto pj = b.begin(); pj != b.end(); pj++ ) {
+            f(*pi, *pj);
+          }
+        }
+      }
+    }
 };
 
 void test_ContainerVector();
 void test_ContainerCells2D();
 template<int dim> void test_ContainerCells();
+
 #endif // CONTAINER_H_
