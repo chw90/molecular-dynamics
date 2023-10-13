@@ -25,10 +25,10 @@ void test_ContainerVector() {
   particles.insert(p3);
   std::cout << particles.size() << std::endl;
 
-  std::cout << "calling map" << std::endl;
+  std::cout << "map:" << std::endl;
   particles.map(print_mass<>);
 
-  std::cout << "calling map_pairwise" << std::endl;
+  std::cout << "map_pairwise:" << std::endl;
   particles.map_pairwise(print_mass_sum<>);
 }
 
@@ -49,9 +49,14 @@ void test_ContainerCells() {
   std::cout << "number of particles: " << particles.size() << std::endl;
 
   particles.neighbor_build(b);
+  // move one particle to neighbor cell
+  auto ip = particles.data[0][0].begin();
+  (*ip).x[0] = 0.6;
+  particles.neighbor_build(b);
 
   std::cout << "map:" << std::endl;
   particles.map(print_mass<>);
+
   std::cout << "map_pairwise:" << std::endl;
   particles.map_pairwise(print_mass_sum<>);
 }
