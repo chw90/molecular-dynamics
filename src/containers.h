@@ -293,6 +293,6 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
 };
 
 void test_ContainerVector();
-void test_ContainerCells();
-
+void test_ContainerCells2D();
+template<int dim> void test_ContainerCells();
 #endif // CONTAINER_H_
