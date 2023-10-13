@@ -1,5 +1,5 @@
-#include "containers.h"
-#include "types.h"
+#include "containers.hpp"
+#include "types.hpp"
 #include <iostream>
 
 template<int dim=DIM>

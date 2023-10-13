@@ -1,8 +1,8 @@
 #ifndef CONTAINER_H_
 #define CONTAINER_H_
 
-#include "globals.h"
-#include "types.h"
+#include "globals.hpp"
+#include "types.hpp"
 #include <cmath>
 #include <array>
 #include <vector>

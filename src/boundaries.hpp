@@ -1,8 +1,8 @@
 #ifndef BOUNDARIES_H_
 #define BOUNDARIES_H_
 
-#include "globals.h"
-#include "types.h"
+#include "globals.hpp"
+#include "types.hpp"
 #include <stdexcept>
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>

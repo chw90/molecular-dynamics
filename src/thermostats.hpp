@@ -1,9 +1,9 @@
 #ifndef THERMOSTATS_H_
 #define THERMOSTATS_H_
 
-#include "globals.h"
-#include "types.h"
-#include "statistics.h"
+#include "globals.hpp"
+#include "types.hpp"
+#include "statistics.hpp"
 #include <cmath>
 #include <random>
 

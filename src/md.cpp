@@ -1,10 +1,12 @@
-#include "initializers.h"
-#include "potentials.h"
-#include "fields.h"
-#include "boundaries.h"
-#include "thermostats.h"
-#include "barostats.h"
-#include "integrators.h"
+#include "initializers.hpp"
+#include "potentials.hpp"
+#include "fields.hpp"
+#include "boundaries.hpp"
+#include "thermostats.hpp"
+#include "barostats.hpp"
+#include "integrators.hpp"
+
+#include "containers.hpp"
 
 int main () {
 

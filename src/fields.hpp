@@ -1,8 +1,8 @@
 #ifndef FIELDS_H_
 #define FIELDS_H_
 
-#include "globals.h"
-#include "types.h"
+#include "globals.hpp"
+#include "types.hpp"
 
 template<int dim=DIM>
 class Field {

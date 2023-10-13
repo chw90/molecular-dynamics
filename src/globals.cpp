@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "globals.hpp"
 
 static_assert( DIM == 2 || DIM == 3);
 

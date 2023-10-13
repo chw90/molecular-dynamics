@@ -1,15 +1,15 @@
 #ifndef INTEGRATORS_H_
 #define INTEGRATORS_H_
 
-#include "globals.h"
-#include "types.h"
-#include "potentials.h"
-#include "fields.h"
-#include "boundaries.h"
-#include "thermostats.h"
-#include "barostats.h"
-#include "statistics.h"
-#include "output.h"
+#include "globals.hpp"
+#include "types.hpp"
+#include "potentials.hpp"
+#include "fields.hpp"
+#include "boundaries.hpp"
+#include "thermostats.hpp"
+#include "barostats.hpp"
+#include "statistics.hpp"
+#include "output.hpp"
 #include <vector>
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>

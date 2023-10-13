@@ -1,8 +1,8 @@
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
-#include "globals.h"
-#include "types.h"
+#include "globals.hpp"
+#include "types.hpp"
 #include <iostream>
 #include <iomanip>
 

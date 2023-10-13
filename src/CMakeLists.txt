@@ -2,16 +2,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 set(SOURCES
   globals.cpp
-  types.h
+  types.hpp
   test_container.cpp
   initializers.cpp
-  potentials.h
-  fields.h
-  boundaries.h
-  thermostats.h
-  statistics.h
-  output.h
-  integrators.h
+  potentials.hpp
+  fields.hpp
+  boundaries.hpp
+  thermostats.hpp
+  statistics.hpp
+  output.hpp
+  integrators.hpp
 )
 
 add_executable("${PROJECT_NAME}" "${SOURCES}" md.cpp)

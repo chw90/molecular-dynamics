@@ -1,8 +1,8 @@
 #ifndef INITIALIZE_H_
 #define INITIALIZE_H_
 
-#include "globals.h"
-#include "types.h"
+#include "globals.hpp"
+#include "types.hpp"
 
 System<ParticleVector<2>, 2> system_planets();
 System<> system_xenon();

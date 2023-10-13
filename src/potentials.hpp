@@ -1,8 +1,8 @@
 #ifndef POTENTIALS_H_
 #define POTENTIALS_H_
 
-#include "globals.h"
-#include "types.h"
+#include "globals.hpp"
+#include "types.hpp"
 #include <cmath>
 #include <numbers>
 

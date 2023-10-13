@@ -1,9 +1,9 @@
 #ifndef BAROSTATS_H_
 #define BAROSTATS_H_
 
-#include "globals.h"
-#include "types.h"
-#include "statistics.h"
+#include "globals.hpp"
+#include "types.hpp"
+#include "statistics.hpp"
 #include <cmath>
 
 template<typename T=ParticleVector<DIM>, int dim=DIM>
