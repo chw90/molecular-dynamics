@@ -245,7 +245,7 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
       // determine finest possible decomposition into cells
       box = b;
       for ( int k = 0; k < dim; k++ ) {
-        nc[k] = std::floor((box.hi[k]-box.lo[k])/cutoff);
+        nc[k] = static_cast<int> (std::max(1.0, std::floor((box.hi[k]-box.lo[k])/cutoff)));
         lc[k] = (box.hi[k]-box.lo[k])/nc[k];
       }
     }
