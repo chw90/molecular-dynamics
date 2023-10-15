@@ -3,7 +3,7 @@
 #include <random>
 
 // planet n-body problem
-System<ContainerDefault<2>, 2> system_planets() {
+System<ContainerVector<2>, 2> system_planets() {
   // set constants
   double const kb = 1.380649e-23;   // Boltzmann constant
 
@@ -14,8 +14,8 @@ System<ContainerDefault<2>, 2> system_planets() {
   hi.fill(upper);
   auto b = Box<2>(lo, hi);
 
-  // initialize particles
-  ContainerDefault<2> p(b, 0.5);
+  ContainerVector<2> p;
+
   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // sun
   auto p2 = Particle<2>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // earth
   auto p3 = Particle<2>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0}); // jupiter
@@ -44,7 +44,7 @@ Options options_planets() {
 }
 
 // xenon gas problem
-System<ContainerDefault<DIM>, DIM> system_xenon() {
+System<ContainerType<DIM>, DIM> system_xenon() {
   // set constants
   double const kb = 1.380649e-23;         // Boltzmann constant
   double const m = 2.180171556711138e-25; // mass
@@ -66,7 +66,9 @@ System<ContainerDefault<DIM>, DIM> system_xenon() {
   auto &reng = RandomGenerator::engine;
   std::uniform_real_distribution<double> position_component(lower+separation, upper-separation);
   std::normal_distribution<double> velocity_component(0.0, standard_deviation);
-  ContainerDefault<DIM> p(b, 0.5);;
+
+  ContainerType<DIM> p;
+
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<DIM>(1, m);
     for ( int k = 0; k < DIM; k++ ) {

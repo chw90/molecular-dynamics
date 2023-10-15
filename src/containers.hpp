@@ -298,7 +298,7 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
 };
 
 template<int dim=DIM>
-using ContainerDefault = ContainerCells<dim>;
+using ContainerType = ContainerVector<dim>;
 
 class Constants {
   public:
@@ -306,7 +306,7 @@ class Constants {
     Constants(double kb) : kb(kb) {};
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class System {
   public:
     T particles;

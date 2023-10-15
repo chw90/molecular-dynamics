@@ -20,7 +20,7 @@ void print(T const &arg, const TS&... args) {
     print(args...);
 }
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 void dump(System<T, dim> &sys, Options &opt, unsigned &step) {
 
     // timestep header

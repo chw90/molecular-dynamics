@@ -6,8 +6,6 @@
 #include "barostats.hpp"
 #include "integrators.hpp"
 
-#include "containers.hpp"
-
 int main () {
 
   // test_ContainerVector();
@@ -15,9 +13,11 @@ int main () {
   // test_ContainerCells<3>();
 
   // initialize system
+  // auto system = system_planets();
   auto system = system_xenon();
 
   // initialize options
+  // auto options = options_planets();
   auto options = options_xenon();
 
   // set potential

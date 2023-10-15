@@ -12,7 +12,7 @@ void print_header() {
   print("step", "time", "kinetic energy", "temperature", "pressure");
 }
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 void print_statistics(System<T, dim> &sys, int const &i, double const &t) {
   auto e_kin = kinetic_energy(sys);
   auto temp = temperature(sys, e_kin);
@@ -20,7 +20,7 @@ void print_statistics(System<T, dim> &sys, int const &i, double const &t) {
   print(i, t, e_kin, temp, press);
 }
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 double kinetic_energy(System<T, dim> &sys) {
   double e_kin = 0.0;
   sys.particles.map([&e_kin](Particle<dim> &p) {
@@ -31,12 +31,12 @@ double kinetic_energy(System<T, dim> &sys) {
   return e_kin;
 }
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 double temperature(System<T, dim> &sys, double const e_kin) {
   return 2.0/(dim*sys.constants.kb*sys.particles.size())*e_kin;
 }
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 double pressure(System<T, dim> &sys) {
   double volume = 1.0;
   for ( int k = 0; k < dim; k++ ) {

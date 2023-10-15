@@ -7,7 +7,7 @@
 #include "statistics.hpp"
 #include <cmath>
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class Barostat {
   // abstract base class for barostats
   public:
@@ -15,7 +15,7 @@ class Barostat {
     virtual void apply(System<T, dim> &sys, Options const &opt) = 0; // apply via general system modification
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class BarostatNone : public Barostat<T, dim> {
   // no barostatting
   public:
@@ -24,7 +24,7 @@ class BarostatNone : public Barostat<T, dim> {
     void apply(System<T, dim> &sys, Options const &opt) {};
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class BarostatBehrendsen : public Barostat<T, dim> {
   // isotropic Behrendsen barostat
   double const target;          // target pressure

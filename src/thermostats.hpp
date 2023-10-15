@@ -8,7 +8,7 @@
 #include <cmath>
 #include <random>
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class Thermostat {
   // abstract base class for thermostats
   public:
@@ -17,7 +17,7 @@ class Thermostat {
     virtual void apply_velocities(System<T, dim> &sys) = 0; // apply via velocity modification
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class ThermostatNone : public Thermostat<T, dim> {
   // no thermostatting
   public:
@@ -27,7 +27,7 @@ class ThermostatNone : public Thermostat<T, dim> {
     void apply_velocities(System<T, dim> &sys) {};
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class ThermostatWoodcock : public Thermostat<T, dim> {
   // Woodcock thermostat
   double const target;          // target temperature
@@ -47,7 +47,7 @@ class ThermostatWoodcock : public Thermostat<T, dim> {
     }
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class ThermostatBehrendsen : public Thermostat<T, dim> {
   // Behrendsen thermostat
   double const target;          // target temperature
@@ -69,7 +69,7 @@ class ThermostatBehrendsen : public Thermostat<T, dim> {
     }
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class ThermostatGauss : public Thermostat<T, dim> {
   // Gauss thermostat
   public:
@@ -101,7 +101,7 @@ class ThermostatGauss : public Thermostat<T, dim> {
     void apply_velocities(System<T, dim> &sys) {};
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class ThermostatAndersen : public Thermostat<T, dim> {
   // Andersen thermostat
   double const target;          // target temperature

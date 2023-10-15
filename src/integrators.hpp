@@ -13,7 +13,7 @@
 #include "output.hpp"
 #include <vector>
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class Integrator {
   protected:
     Potential<dim> &pot;
@@ -27,7 +27,7 @@ class Integrator {
     virtual void run(System<T, dim> &sys, Options &opt) = 0;
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class IntegratorStroemerVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;
@@ -44,7 +44,7 @@ class IntegratorStroemerVerlet : public Integrator<T, dim> {
     }
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class IntegratorVelocityVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;
@@ -129,7 +129,7 @@ class IntegratorVelocityVerlet : public Integrator<T, dim> {
     }
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class IntegratorPositionVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;
@@ -146,7 +146,7 @@ class IntegratorPositionVerlet : public Integrator<T, dim> {
     }
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class IntegratorLeapfrogVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;

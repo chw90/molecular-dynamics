@@ -6,7 +6,7 @@
 #include "containers.hpp"
 #include <stdexcept>
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class Boundary {
   // abstract base class for boundaries
   public:
@@ -14,7 +14,7 @@ class Boundary {
     virtual void apply_forces(Particle<dim> &p, Box<dim> b) = 0; // apply via boundary forces
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class BoundaryNone : public Boundary<T, dim> {
   // no boundary
   public:
@@ -22,7 +22,7 @@ class BoundaryNone : public Boundary<T, dim> {
     void apply_forces(Particle<dim> &p, Box<dim> b) {};
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class BoundaryWallHarmonic : public Boundary<T, dim> {
   // fixed walls with harmonic repulsive potential
   double const epsilon;         // scaling factor
@@ -46,7 +46,7 @@ class BoundaryWallHarmonic : public Boundary<T, dim> {
     }
 };
 
-template<typename T=ContainerDefault<DIM>, int dim=DIM>
+template<typename T=ContainerType<DIM>, int dim=DIM>
 class BoundaryWallReflect : public Boundary<T, dim> {
   // fixed walls which reflect crossing particles
     double const thresh;     // threshold for throwing error instead of reflecting
