@@ -2,7 +2,7 @@
 #define FIELDS_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
 
 template<int dim=DIM>
 class Field {

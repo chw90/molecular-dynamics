@@ -2,12 +2,13 @@
 #define THERMOSTATS_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
+#include "containers.hpp"
 #include "statistics.hpp"
 #include <cmath>
 #include <random>
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class Thermostat {
   // abstract base class for thermostats
   public:
@@ -16,7 +17,7 @@ class Thermostat {
     virtual void apply_velocities(System<T, dim> &sys) = 0; // apply via velocity modification
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class ThermostatNone : public Thermostat<T, dim> {
   // no thermostatting
   public:
@@ -26,7 +27,7 @@ class ThermostatNone : public Thermostat<T, dim> {
     void apply_velocities(System<T, dim> &sys) {};
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class ThermostatWoodcock : public Thermostat<T, dim> {
   // Woodcock thermostat
   double const target;          // target temperature
@@ -38,15 +39,15 @@ class ThermostatWoodcock : public Thermostat<T, dim> {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(target/temp);
       // modify velocities
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([&factor](Particle<dim> &p) {
         for ( auto &vi: p.v ) {
           vi *= factor;
         }
-      }
+      });
     }
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class ThermostatBehrendsen : public Thermostat<T, dim> {
   // Behrendsen thermostat
   double const target;          // target temperature
@@ -60,15 +61,15 @@ class ThermostatBehrendsen : public Thermostat<T, dim> {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(1 + damping*(target/temp - 1));
       // modify velocities
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([&factor](Particle<dim> &p) {
         for ( auto &vi: p.v ) {
           vi *= factor;
         }
-      }
+      });
     }
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class ThermostatGauss : public Thermostat<T, dim> {
   // Gauss thermostat
   public:
@@ -82,25 +83,25 @@ class ThermostatGauss : public Thermostat<T, dim> {
       // compute zeta
       double zeta_num = 0;      // numerator of zeta
       double zeta_den = 0;      // denominator of zeta
-      for ( auto p: sys.particles ) {
+      sys.particles.map([&zeta_num, &zeta_den](Particle<dim> &p) {
         for ( int i = 0; i < dim; i++ ) {
           zeta_num += p.v[i]*p.f[i]; // assumes that p.f[i] = - dV/dx[i]
           zeta_den += p.m*std::pow(p.v[i], 2);
         }
-      }
+      });
       auto zeta = - zeta_num/zeta_den;
 
       // modify forces
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([&zeta](Particle<dim> &p) {
         for ( int i = 0; i < dim; i++ ) {
           p.f[i] += -zeta*p.m*p.v[i];
         }
-      }
+      });
     }
     void apply_velocities(System<T, dim> &sys) {};
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class ThermostatAndersen : public Thermostat<T, dim> {
   // Andersen thermostat
   double const target;          // target temperature
@@ -123,7 +124,7 @@ class ThermostatAndersen : public Thermostat<T, dim> {
       auto np = std::floor(rate*sys.particles.size());
       for ( int i = 0; i < np; i++ ) {
         // pick random particle
-        auto &p = sys.particles[index(RandomGenerator::engine)];
+        auto &p = sys.particles.get_random_particle();
         for ( int k = 0; k < dim; k++ ) {
           // override velocity component
           p.v[k] = vc(RandomGenerator::engine);

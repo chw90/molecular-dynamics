@@ -2,7 +2,7 @@
 #define POTENTIALS_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
 #include <cmath>
 #include <numbers>
 

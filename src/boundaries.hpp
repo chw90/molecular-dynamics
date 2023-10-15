@@ -2,10 +2,11 @@
 #define BOUNDARIES_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
+#include "containers.hpp"
 #include <stdexcept>
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class Boundary {
   // abstract base class for boundaries
   public:
@@ -13,7 +14,7 @@ class Boundary {
     virtual void apply_forces(Particle<dim> &p, Box<dim> b) = 0; // apply via boundary forces
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class BoundaryNone : public Boundary<T, dim> {
   // no boundary
   public:
@@ -21,7 +22,7 @@ class BoundaryNone : public Boundary<T, dim> {
     void apply_forces(Particle<dim> &p, Box<dim> b) {};
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class BoundaryWallHarmonic : public Boundary<T, dim> {
   // fixed walls with harmonic repulsive potential
   double const epsilon;         // scaling factor
@@ -45,15 +46,15 @@ class BoundaryWallHarmonic : public Boundary<T, dim> {
     }
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class BoundaryWallReflect : public Boundary<T, dim> {
   // fixed walls which reflect crossing particles
     double const thresh;     // threshold for throwing error instead of reflecting
   public:
     BoundaryWallReflect(double const thresh) : thresh(thresh) {};
     void apply(System<T, dim> &sys) {
-      for ( auto &p: sys.particles ) {
-        for ( int k = 0; k < dim; k++ ) {
+      sys.particles.map([&sys, &thresh=thresh](Particle<dim> &p) {
+       for ( int k = 0; k < dim; k++ ) {
           auto l = sys.box.hi[k]-sys.box.lo[k];    // box length in dimension k
           auto dlo = p.x[k] - sys.box.lo[k]; // distance to lower box bound
           auto dhi = sys.box.hi[k] - p.x[k]; // distance to upper box bound
@@ -70,7 +71,7 @@ class BoundaryWallReflect : public Boundary<T, dim> {
             }
           }
         }
-      }
+      });
     }
     void apply_forces(Particle<dim> &p, Box<dim> b) {};
 };

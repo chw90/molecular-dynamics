@@ -2,7 +2,8 @@
 #define OUTPUT_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
+#include "containers.hpp"
 #include <iostream>
 #include <iomanip>
 
@@ -19,8 +20,8 @@ void print(T const &arg, const TS&... args) {
     print(args...);
 }
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
-void dump(System<T, dim> const &sys, Options &opt, unsigned const &step) {
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
+void dump(System<T, dim> &sys, Options &opt, unsigned &step) {
 
     // timestep header
     opt.df << "ITEM: TIMESTEP" << std::endl << step << std::endl;
@@ -38,7 +39,8 @@ void dump(System<T, dim> const &sys, Options &opt, unsigned const &step) {
     // particle data
     opt.df << "ITEM: ATOMS id type x y z vx vy vz" << std::endl;
     int l = 0;
-    for ( auto p: sys.particles) {
+    // for ( auto p: sys.particles) {
+    sys.particles.map([&l,&opt](Particle<dim> &p) {
         // particle ID and type
         opt.df << l << " " << p.type;
         // position
@@ -52,8 +54,9 @@ void dump(System<T, dim> const &sys, Options &opt, unsigned const &step) {
         }
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
         opt.df << std::endl;
+
         l++;
-    }
+    });
 }
 
 #endif // OUTPUT_H_

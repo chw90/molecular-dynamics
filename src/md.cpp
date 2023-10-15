@@ -10,6 +10,10 @@
 
 int main () {
 
+  // test_ContainerVector();
+  // test_ContainerCells2D();
+  // test_ContainerCells<3>();
+
   // initialize system
   auto system = system_xenon();
 

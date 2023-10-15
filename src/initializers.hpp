@@ -2,10 +2,11 @@
 #define INITIALIZE_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
+#include "containers.hpp"
 
-System<ParticleVector<2>, 2> system_planets();
-System<> system_xenon();
+System<ContainerDefault<2>, 2> system_planets();
+System<ContainerDefault<DIM>, DIM> system_xenon();
 
 Options options_planets();
 Options options_xenon();

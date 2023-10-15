@@ -2,12 +2,22 @@
 #define CONTAINER_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
 #include <cmath>
 #include <array>
 #include <vector>
+#include <fstream>
 #include <list>
 #include <boost/multi_array.hpp>
+
+template<int dim=DIM>
+class Box {
+  public:
+    // simulation box
+    array<dim> lo;              // lower bounds
+    array<dim> hi;              // upper bounds
+    Box(array<dim> lo, array<dim> hi) : lo(lo), hi(hi) {};
+};
 
 template<typename T, int dim=DIM>
 class Container {
@@ -285,6 +295,38 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
         }
       }
     }
+};
+
+template<int dim=DIM>
+using ContainerDefault = ContainerCells<dim>;
+
+class Constants {
+  public:
+    double const kb;            // Boltzmann constant
+    Constants(double kb) : kb(kb) {};
+};
+
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
+class System {
+  public:
+    T particles;
+    Box<dim> box;
+    Constants constants;
+    System(T &particles, Box<dim> &box, Constants &constants) :
+      particles(particles), box(box), constants(constants) {};
+};
+
+class Options {
+  // encapsulates simulation options
+  public:
+    double dt;                    // timestep
+    double ts;                    // start time
+    double te;                    // end time
+    std::ofstream df;             // output dump file
+    int freq;                     // output dump frequency
+    Options(double dt, double ts, double te, int freq) : dt(dt), ts(ts), te(te), freq(freq) {
+      df.open(DUMP_FILE);
+    };
 };
 
 void test_ContainerVector();

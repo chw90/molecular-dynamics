@@ -1,5 +1,5 @@
+#include "particles.hpp"
 #include "containers.hpp"
-#include "types.hpp"
 #include <iostream>
 
 template<int dim=DIM>

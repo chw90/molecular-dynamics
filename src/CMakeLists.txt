@@ -2,7 +2,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 set(SOURCES
   globals.cpp
-  types.hpp
+  particles.hpp
   test_container.cpp
   initializers.cpp
   potentials.hpp

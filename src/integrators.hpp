@@ -2,7 +2,8 @@
 #define INTEGRATORS_H_
 
 #include "globals.hpp"
-#include "types.hpp"
+#include "particles.hpp"
+#include "containers.hpp"
 #include "potentials.hpp"
 #include "fields.hpp"
 #include "boundaries.hpp"
@@ -12,7 +13,7 @@
 #include "output.hpp"
 #include <vector>
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class Integrator {
   protected:
     Potential<dim> &pot;
@@ -26,7 +27,7 @@ class Integrator {
     virtual void run(System<T, dim> &sys, Options &opt) = 0;
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class IntegratorStroemerVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;
@@ -43,7 +44,7 @@ class IntegratorStroemerVerlet : public Integrator<T, dim> {
     }
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class IntegratorVelocityVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;
@@ -83,12 +84,12 @@ class IntegratorVelocityVerlet : public Integrator<T, dim> {
   private:
     void update_positions(System<T, dim> &sys, Options const &opt, unsigned const &step) {
       // position update
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([&opt](Particle<dim> &p) {
         for ( int k = 0; k < dim; k++) {
           p.x[k] += opt.dt * (p.v[k] + 0.5*opt.dt/p.m*p.f[k]);
           p.buffer[k] = p.f[k];     // buffer old forces
         }
-      }
+      });
       // apply barostat
       if ( step % bstat.step == 0 ) {
         bstat.apply(sys, opt);
@@ -96,11 +97,11 @@ class IntegratorVelocityVerlet : public Integrator<T, dim> {
     }
     void update_velocities(System<T, dim> &sys, Options const &opt, unsigned const &step) {
       // velocity update
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([&opt](Particle<dim> &p) {
         for ( int k = 0; k < dim; k++) {
           p.v[k] += 0.5*opt.dt/p.m * (p.f[k]+p.buffer[k]);
         }
-      }
+      });
       // apply thermostat
       if ( step % tstat.step == 0) {
         tstat.apply_velocities(sys);
@@ -108,28 +109,27 @@ class IntegratorVelocityVerlet : public Integrator<T, dim> {
     }
     void update_forces(System<T, dim> &sys, Options const &opt, unsigned const &step) {
       // reset forces
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([](Particle<dim> &p) {
         p.f.fill(0.0);
-      }
+      });
       // evaluate potential
-      for ( auto i = sys.particles.begin(); i != sys.particles.end(); i++) {
-        for ( auto j = i+1; j != sys.particles.end(); j++ ) {
-          pot.evaluate(*i, *j);
-        }
-      }
+      sys.particles.map_pairwise([&pot=pot](Particle<dim> &pi, Particle<dim> &pj) {
+        pot.evaluate(pi,pj);
+      });
+
       // apply thermostat
       if ( step % tstat.step == 0) {
         tstat.apply_forces(sys);
       }
       // apply field and boundary forces
-      for ( auto &p: sys.particles ) {
+      sys.particles.map([&sys, &field=field, &bound=bound](Particle<dim> &p) {
         field.apply(p);
         bound.apply_forces(p, sys.box);
-      }
+      });
     }
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class IntegratorPositionVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;
@@ -146,7 +146,7 @@ class IntegratorPositionVerlet : public Integrator<T, dim> {
     }
 };
 
-template<typename T=ParticleVector<DIM>, int dim=DIM>
+template<typename T=ContainerDefault<DIM>, int dim=DIM>
 class IntegratorLeapfrogVerlet : public Integrator<T, dim> {
   protected:
     using base = Integrator<T, dim>;

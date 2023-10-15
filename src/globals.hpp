@@ -2,10 +2,14 @@
 #define GLOBALS_H_
 
 #include <string>
+#include <array>
 #include <random>
 
-constexpr int const DIM = 3;              // dimension
+constexpr int const DIM = 2;              // dimension
 std::string const DUMP_FILE = "md.dump";  // file name for output dump
+
+template<int dim=DIM>
+using array = std::array<double, dim>;
 
 class RandomGenerator {
     public:
