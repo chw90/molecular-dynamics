@@ -63,10 +63,9 @@ void test_ContainerCells2D() {
 
   std::cout << "map_pairwise:" << std::endl;
   particles.map_pairwise(print_pair<>);
-}
 
-template void test_ContainerCells<2>();
-template void test_ContainerCells<3>();
+  particles.map([](Particle<2> &p) { p.x[0] = 0.0; });
+}
 
 template<int dim>
 void test_ContainerCells() {
@@ -118,4 +117,12 @@ void test_ContainerCells() {
   std::cout << "map_pairwise:" << std::endl;
   particles.map_pairwise(print_pair<dim>);
 
+}
+
+int main() {
+
+  test_ContainerVector();
+  test_ContainerCells<2>();
+  test_ContainerCells<3>();
+  return 0;
 }
