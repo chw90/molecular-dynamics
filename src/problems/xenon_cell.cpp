@@ -5,7 +5,7 @@
 #include "barostats.hpp"
 #include "integrators.hpp"
 
-using ParticleContainer = ContainerVector<DIM>;
+using ParticleContainer = ContainerCells<DIM>;
 
 System<ParticleContainer, DIM> set_system() {
   // set constants
@@ -30,7 +30,7 @@ System<ParticleContainer, DIM> set_system() {
   std::uniform_real_distribution<double> position_component(lower+separation, upper-separation);
   std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
-  ParticleContainer p;
+  ParticleContainer p(b, upper/5);
 
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<DIM>(1, m);

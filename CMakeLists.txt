@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # define project
-project("molded" LANGUAGES "CXX")
+project("md" LANGUAGES "CXX")
 
 # check dependencies
 find_package("Boost")

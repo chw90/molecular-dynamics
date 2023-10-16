@@ -33,7 +33,7 @@ class Container {
 };
 
 template<int dim=DIM>
-class ContainerVector : public Container<std::vector<Particle<dim>>> {
+class ContainerVector : public Container<std::vector<Particle<dim>>, dim> {
   // particle data structure: std::vector of Particles
   public:
     std::vector<Particle<dim>> data;
@@ -70,7 +70,7 @@ using Cell = std::list<Particle<dim>>;
 template<int dim=DIM>
 using CellArray = boost::multi_array<Cell<dim>, dim>;
 
-template<int dim=DIM> // requires ( dim == 2 || dim == 3  ) // TODO: uncomment and fix linting
+template<int dim=DIM> requires ( dim == 2 || dim == 3  )
 class ContainerCells : public Container<CellArray<dim>, dim> {
   public:
     CellArray<dim> data;
@@ -298,7 +298,7 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
 };
 
 template<int dim=DIM>
-using ContainerType = ContainerVector<dim>;
+using ContainerType = ContainerCells<dim>;
 
 class Constants {
   public:
@@ -328,9 +328,5 @@ class Options {
       df.open(DUMP_FILE);
     };
 };
-
-void test_ContainerVector();
-void test_ContainerCells2D();
-template<int dim> void test_ContainerCells();
 
 #endif // CONTAINER_H_
