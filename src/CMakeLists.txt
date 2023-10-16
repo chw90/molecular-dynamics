@@ -12,3 +12,4 @@ add_executable(tests tests/tests.cpp)
 
 add_executable(planets problems/planets.cpp)
 add_executable(xenon problems/xenon.cpp)
+add_executable(xenon_cell problems/xenon_cell.cpp)
