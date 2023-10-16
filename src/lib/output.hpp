@@ -11,7 +11,7 @@ const int FILL = 15;
 
 template<typename T>
 void print(T const &arg) {
-    std::cout << std::setw(FILL) << arg << std::endl;
+    std::cout << std::setw(FILL) << arg << '\n';
 }
 
 template<typename T, typename... TS>
@@ -24,20 +24,20 @@ template<typename T=ContainerType<DIM>, int dim=DIM>
 void dump(System<T, dim> &sys, Options &opt, unsigned &step) {
 
     // timestep header
-    opt.df << "ITEM: TIMESTEP" << std::endl << step << std::endl;
-    opt.df << "ITEM: NUMBER OF ATOMS" << std::endl << sys.particles.size() << std::endl;
+    opt.df << "ITEM: TIMESTEP" << '\n' << step << '\n';
+    opt.df << "ITEM: NUMBER OF ATOMS" << '\n' << sys.particles.size() << '\n';
 
     // box bounds
-    opt.df << "ITEM: BOX BOUNDS ff ff ff" << std::endl;
+    opt.df << "ITEM: BOX BOUNDS ff ff ff" << '\n';
     for ( int k = 0; k < dim; k++ ) {
         opt.df << sys.box.lo[k] << " " << sys.box.hi[k];
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
-        opt.df << std::endl;
+        opt.df << '\n';
     }
-    if constexpr ( dim == 2 ) opt.df << 0.0 << " " << 0.0 << " " << 0.0 << std::endl;
+    if constexpr ( dim == 2 ) opt.df << 0.0 << " " << 0.0 << " " << 0.0 << '\n';
 
     // particle data
-    opt.df << "ITEM: ATOMS id type x y z vx vy vz" << std::endl;
+    opt.df << "ITEM: ATOMS id type x y z vx vy vz" << '\n';
     int l = 0;
     // for ( auto p: sys.particles) {
     sys.particles.map([&l,&opt](Particle<dim> &p) {
@@ -53,10 +53,13 @@ void dump(System<T, dim> &sys, Options &opt, unsigned &step) {
             opt.df << " " << p.v[k];
         }
         if constexpr ( dim == 2 ) opt.df << " " << 0.0;
-        opt.df << std::endl;
+        opt.df << '\n';
 
         l++;
     });
+
+    // flush output stream
+    std::cout << std::flush;
 }
 
 #endif // OUTPUT_H_

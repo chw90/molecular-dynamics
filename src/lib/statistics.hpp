@@ -5,7 +5,6 @@
 #include "particles.hpp"
 #include "output.hpp"
 #include <cmath>
-#include <iostream>
 
 void print_header() {
   // print the table header for the output of print_statistics
