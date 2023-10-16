@@ -297,22 +297,19 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
     }
 };
 
-template<int dim=DIM>
-using ContainerType = ContainerCells<dim>;
-
 class Constants {
   public:
     double const kb;            // Boltzmann constant
     Constants(double kb) : kb(kb) {};
 };
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
+template<typename ContainerType, int dim=DIM>
 class System {
   public:
-    T particles;
+    ContainerType particles;
     Box<dim> box;
     Constants constants;
-    System(T &particles, Box<dim> &box, Constants &constants) :
+    System(ContainerType &particles, Box<dim> &box, Constants &constants) :
       particles(particles), box(box), constants(constants) {};
 };
 

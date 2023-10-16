@@ -7,25 +7,25 @@
 #include "statistics.hpp"
 #include <cmath>
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
+template<typename ContainerType, int dim=DIM>
 class Barostat {
   // abstract base class for barostats
   public:
     int const step = 1;         // apply thermostat every step steps
-    virtual void apply(System<T, dim> &sys, Options const &opt) = 0; // apply via general system modification
+    virtual void apply(System<ContainerType, dim> &sys, Options const &opt) = 0; // apply via general system modification
 };
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
-class BarostatNone : public Barostat<T, dim> {
+template<typename ContainerType, int dim=DIM>
+class BarostatNone : public Barostat<ContainerType, dim> {
   // no barostatting
   public:
     int const step = 1;         // apply thermostat every step steps
     BarostatNone() : step(0) {};
-    void apply(System<T, dim> &sys, Options const &opt) {};
+    void apply(System<ContainerType, dim> &sys, Options const &opt) {};
 };
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
-class BarostatBehrendsen : public Barostat<T, dim> {
+template<typename ContainerType, int dim=DIM>
+class BarostatBehrendsen : public Barostat<ContainerType, dim> {
   // isotropic Behrendsen barostat
   double const target;          // target pressure
   double const beta;            // isothermal compressibility
@@ -34,7 +34,7 @@ class BarostatBehrendsen : public Barostat<T, dim> {
     int const step;             // apply thermostat every step steps
     BarostatBehrendsen(double target, double beta, double relax, int step) :
       target(target), beta(beta), relax(relax), step(step) {};
-    void apply(System<T, dim> &sys, Options const &opt) {
+    void apply(System<ContainerType, dim> &sys, Options const &opt) {
       auto press = pressure(sys);
       auto eta = 1 - beta*opt.dt/relax*(target-press);
       auto factor = std::cbrt(eta);

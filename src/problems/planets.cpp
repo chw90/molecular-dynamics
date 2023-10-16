@@ -5,10 +5,10 @@
 #include "barostats.hpp"
 #include "integrators.hpp"
 
-using ParticleContainer = ContainerVector<2>;
+using ContainerType = ContainerVector<2>;
 
 // planet n-body problem
-System<ParticleContainer, 2> set_system() {
+System<ContainerType, 2> set_system() {
   // set constants
   double const kb = 1.380649e-23;   // Boltzmann constant
 
@@ -63,16 +63,16 @@ int main () {
   auto field = FieldNone<2>();
 
   // set boundary
-  auto boundary = BoundaryNone<ParticleContainer, 2>();
+  auto boundary = BoundaryNone<ContainerType, 2>();
 
   // set thermostat
-  auto thermostat = ThermostatNone<ParticleContainer, 2>();
+  auto thermostat = ThermostatNone<ContainerType, 2>();
 
   // set barostat
-  auto barostat = BarostatNone<ParticleContainer, 2>();
+  auto barostat = BarostatNone<ContainerType, 2>();
 
   // set integrator
-  auto integrator = IntegratorVelocityVerlet<ParticleContainer, 2>(potential, boundary, field, thermostat, barostat);
+  auto integrator = IntegratorVelocityVerlet<ContainerType, 2>(potential, boundary, field, thermostat, barostat);
 
   // run simulation
   integrator.run(system, options);

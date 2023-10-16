@@ -20,8 +20,8 @@ void print(T const &arg, const TS&... args) {
     print(args...);
 }
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
-void dump(System<T, dim> &sys, Options &opt, unsigned &step) {
+template<typename ContainerType, int dim=DIM>
+void dump(System<ContainerType, dim> &sys, Options &opt, unsigned &step) {
 
     // timestep header
     opt.df << "ITEM: TIMESTEP" << '\n' << step << '\n';

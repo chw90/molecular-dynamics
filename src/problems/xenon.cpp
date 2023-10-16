@@ -5,9 +5,9 @@
 #include "barostats.hpp"
 #include "integrators.hpp"
 
-using ParticleContainer = ContainerVector<DIM>;
+using ContainerType = ContainerVector<DIM>;
 
-System<ParticleContainer, DIM> set_system() {
+System<ContainerType, DIM> set_system() {
   // set constants
   double const kb = 1.380649e-23;         // Boltzmann constant
   double const m = 2.180171556711138e-25; // mass
@@ -30,7 +30,7 @@ System<ParticleContainer, DIM> set_system() {
   std::uniform_real_distribution<double> position_component(lower+separation, upper-separation);
   std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
-  ParticleContainer p;
+  ContainerType p;
 
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<DIM>(1, m);
@@ -77,21 +77,21 @@ int main () {
 
   // set boundary
   // auto boundary = BoundaryWallHarmonic(1.0, 1e-2); //
-  auto boundary = BoundaryWallReflect<ParticleContainer, DIM>(1e-2);
+  auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
 
   // set thermostat
-  auto thermostat = ThermostatNone<ParticleContainer, DIM>();
+  auto thermostat = ThermostatNone<ContainerType, DIM>();
   // auto thermostat = ThermostatWoodcock(325.0, 10);
   // auto thermostat = ThermostatBehrendsen(325.0, 0.5, 10);
   // auto thermostat = ThermostatGauss(1);
   // auto thermostat = ThermostatAndersen(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
 
   // set barostat
-  auto barostat = BarostatNone<ParticleContainer, DIM>();
+  auto barostat = BarostatNone<ContainerType, DIM>();
   // auto barostat = BarostatBehrendsen(2e-3, 30.0, 20*opt.dt, 1);
 
   // set integrator
-  auto integrator = IntegratorVelocityVerlet<ParticleContainer, DIM>(potential, boundary, field, thermostat, barostat);
+  auto integrator = IntegratorVelocityVerlet<ContainerType, DIM>(potential, boundary, field, thermostat, barostat);
 
   // run simulation
   integrator.run(system, options);

@@ -6,30 +6,30 @@
 #include "containers.hpp"
 #include <stdexcept>
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
+template<typename ContainerType, int dim=DIM>
 class Boundary {
   // abstract base class for boundaries
   public:
-    virtual void apply(System<T, dim> &sys) = 0; // apply via general system modification
+    virtual void apply(System<ContainerType, dim> &sys) = 0; // apply via general system modification
     virtual void apply_forces(Particle<dim> &p, Box<dim> b) = 0; // apply via boundary forces
 };
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
-class BoundaryNone : public Boundary<T, dim> {
+template<typename ContainerType, int dim=DIM>
+class BoundaryNone : public Boundary<ContainerType, dim> {
   // no boundary
   public:
-    void apply(System<T, dim> &sys) {};
+    void apply(System<ContainerType, dim> &sys) {};
     void apply_forces(Particle<dim> &p, Box<dim> b) {};
 };
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
-class BoundaryWallHarmonic : public Boundary<T, dim> {
+template<typename ContainerType, int dim=DIM>
+class BoundaryWallHarmonic : public Boundary<ContainerType, dim> {
   // fixed walls with harmonic repulsive potential
   double const epsilon;         // scaling factor
   double const cutoff;          // cutoff in percent of the box edge length
   public:
     BoundaryWallHarmonic(double epsilon, double cutoff) : epsilon(epsilon), cutoff(cutoff) {};
-    void apply(System<T, dim> &sys) {};
+    void apply(System<ContainerType, dim> &sys) {};
     void apply_forces(Particle<dim> &p, Box<dim> b) {
       // set repulsive force
       for ( int k = 0; k < dim; k++ ) {
@@ -46,13 +46,13 @@ class BoundaryWallHarmonic : public Boundary<T, dim> {
     }
 };
 
-template<typename T=ContainerType<DIM>, int dim=DIM>
-class BoundaryWallReflect : public Boundary<T, dim> {
+template<typename ContainerType, int dim=DIM>
+class BoundaryWallReflect : public Boundary<ContainerType, dim> {
   // fixed walls which reflect crossing particles
     double const thresh;     // threshold for throwing error instead of reflecting
   public:
     BoundaryWallReflect(double const thresh) : thresh(thresh) {};
-    void apply(System<T, dim> &sys) {
+    void apply(System<ContainerType, dim> &sys) {
       sys.particles.map([&sys, &thresh=thresh](Particle<dim> &p) {
        for ( int k = 0; k < dim; k++ ) {
           auto l = sys.box.hi[k]-sys.box.lo[k];    // box length in dimension k
