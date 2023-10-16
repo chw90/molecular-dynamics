@@ -5,7 +5,7 @@
 #include <array>
 #include <random>
 
-constexpr int const DIM = 3;              // default dimension
+constexpr int const DIM = 2;              // default dimension
 std::string const DUMP_FILE = "md.dump";  // file name for output dump
 
 template<int dim=DIM>
