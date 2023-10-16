@@ -1,2 +1,4 @@
 /build/
 /debug/
+*.dir-locals.el
+compile_commands.json
