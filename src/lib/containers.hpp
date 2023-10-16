@@ -37,6 +37,7 @@ class ContainerVector : public Container<std::vector<Particle<dim>>, dim> {
   // particle data structure: std::vector of Particles
   public:
     std::vector<Particle<dim>> data;
+    int rebuild_freq = 1;       // frequency of neighbor rebuilds in step numbers
     size_t size() {
       return data.size();
     }
@@ -74,13 +75,14 @@ template<int dim=DIM> requires ( dim == 2 || dim == 3  )
 class ContainerCells : public Container<CellArray<dim>, dim> {
   public:
     CellArray<dim> data;
+    int rebuild_freq;           // frequency of neighbor rebuilds in step numbers
   private:
-    Box<dim> box;                 // private copy of simulation box
-    double const cutoff;          // cutoff radius of pair potential
-    std::array<int, dim> nc;      // numbers of cells per dimension
-    std::array<double, dim> lc;   // edge length of cells per dimension
+    Box<dim> box;               // private copy of simulation box
+    double const cutoff;        // cutoff radius of pair potential
+    std::array<int, dim> nc;    // numbers of cells per dimension
+    std::array<double, dim> lc; // edge length of cells per dimension
   public:
-    ContainerCells(Box<dim> b, double cutoff) : box(b), cutoff(cutoff) {
+    ContainerCells(Box<dim> b, double cutoff, int rfreq) : box(b), cutoff(cutoff), rebuild_freq(rfreq) {
       set_grid(b);
       set_cells(data);
     }

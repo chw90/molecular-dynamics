@@ -30,7 +30,7 @@ System<ContainerType, DIM> set_system() {
   std::uniform_real_distribution<double> position_component(lower+separation, upper-separation);
   std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
-  ContainerType p(b, upper/5);
+  ContainerType p(b, upper/5, 5);
 
   for ( int i = 0; i < N; i++ ) {
     auto pi = Particle<DIM>(1, m);

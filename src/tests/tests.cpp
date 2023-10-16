@@ -45,7 +45,7 @@ void test_ContainerCells2D() {
   std::array<double, 2> hi = {1.0, 1.0};
   auto b = Box<2>(lo, hi);
 
-  auto particles = ContainerCells<2>(b, 0.4);
+  auto particles = ContainerCells<2>(b, 0.4, 1);
   particles.insert(p1);
   particles.insert(p2);
   particles.insert(p3);
@@ -88,7 +88,7 @@ void test_ContainerCells() {
   // auto p3 = Particle<3>(3, 3.0, {0.3, 0.7, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
   // auto p4 = Particle<3>(4, 4.0, {0.7, 0.3, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
 
-  auto particles = ContainerCells<dim>(b, 0.4);
+  auto particles = ContainerCells<dim>(b, 0.4, 1);
 
   std::uniform_real_distribution<double> x(lower, upper);
   for ( int i = 0; i < N; i++ ) {

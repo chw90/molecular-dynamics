@@ -73,6 +73,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
 
         update_positions(sys, opt, i);
         bound.apply(sys);
+        if ( i % sys.particles.rebuild_freq == 0 ) sys.particles.neighbor_build(sys.box);
         update_forces(sys, opt, i);
         update_velocities(sys, opt, i);
 
