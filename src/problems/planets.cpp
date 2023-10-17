@@ -45,7 +45,7 @@ Options set_options() {
   int freq = 25;
 
   // construct options
-  return Options(dt, ts, te, freq);
+  return Options(dt, ts, te, "planets.md", freq);
 }
 
 int main () {

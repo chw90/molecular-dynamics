@@ -55,7 +55,7 @@ Options set_options() {
   int freq = 10;
 
   // construct options
-  return Options(dt, ts, te, freq);
+  return Options(dt, ts, te, "xenon_cell.md", freq);
 }
 
 

@@ -6,6 +6,7 @@
 #include <cmath>
 #include <array>
 #include <vector>
+#include <string>
 #include <fstream>
 #include <list>
 #include <boost/multi_array.hpp>
@@ -321,10 +322,12 @@ class Options {
     double dt;                    // timestep
     double ts;                    // start time
     double te;                    // end time
+    std::string const outfile;    // path to output file
     std::ofstream df;             // output dump file
     int freq;                     // output dump frequency
-    Options(double dt, double ts, double te, int freq) : dt(dt), ts(ts), te(te), freq(freq) {
-      df.open(DUMP_FILE);
+    Options(double dt, double ts, double te, std::string outfile, int freq) :
+      dt(dt), ts(ts), te(te), outfile(outfile), freq(freq) {
+      df.open(outfile);
     };
 };
 
