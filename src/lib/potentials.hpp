@@ -137,7 +137,7 @@ class PotentialBuckingham : public Potential<dim> {
 
 template <int dim = DIM>
 class PotentialCoulomb : public Potential<dim> {
-   // Buckingham potential
+   // Coulomb potential
    double const epsilon_0;  // dielectric constant
    public:
    PotentialCoulomb(double epsilon_0) : epsilon_0(epsilon_0){};
@@ -152,7 +152,5 @@ class PotentialCoulomb : public Potential<dim> {
       }
    };
 };
-
-// TODO: Coulomb potential
 
 #endif  // POTENTIALS_H_
