@@ -1,58 +1,59 @@
 #ifndef STATISTICS_H_
 #define STATISTICS_H_
 
-#include "globals.hpp"
-#include "particles.hpp"
-#include "output.hpp"
 #include <cmath>
 
+#include "globals.hpp"
+#include "output.hpp"
+#include "particles.hpp"
+
 void print_header() {
-  // print the table header for the output of print_statistics
-  print("step", "time", "kinetic energy", "temperature", "pressure");
+   // print the table header for the output of print_statistics
+   print("step", "time", "kinetic energy", "temperature", "pressure");
 }
 
-template<typename ContainerType, int dim=DIM>
+template <typename ContainerType, int dim = DIM>
 void print_statistics(System<ContainerType, dim> &sys, int const &i, double const &t) {
-  auto e_kin = kinetic_energy(sys);
-  auto temp = temperature(sys, e_kin);
-  auto press = pressure(sys);
-  print(i, t, e_kin, temp, press);
+   auto e_kin = kinetic_energy(sys);
+   auto temp = temperature(sys, e_kin);
+   auto press = pressure(sys);
+   print(i, t, e_kin, temp, press);
 }
 
-template<typename ContainerType, int dim=DIM>
+template <typename ContainerType, int dim = DIM>
 double kinetic_energy(System<ContainerType, dim> &sys) {
-  double e_kin = 0.0;
-  sys.particles.map([&e_kin](Particle<dim> &p) {
-    for ( auto vi: p.v) {
-      e_kin += 0.5*p.m*std::pow(vi, 2);
-    }
-  });
-  return e_kin;
+   double e_kin = 0.0;
+   sys.particles.map([&e_kin](Particle<dim> &p) {
+      for (auto vi : p.v) {
+         e_kin += 0.5 * p.m * std::pow(vi, 2);
+      }
+   });
+   return e_kin;
 }
 
-template<typename ContainerType, int dim=DIM>
+template <typename ContainerType, int dim = DIM>
 double temperature(System<ContainerType, dim> &sys, double const e_kin) {
-  return 2.0/(dim*sys.constants.kb*sys.particles.size())*e_kin;
+   return 2.0 / (dim * sys.constants.kb * sys.particles.size()) * e_kin;
 }
 
-template<typename ContainerType, int dim=DIM>
+template <typename ContainerType, int dim = DIM>
 double pressure(System<ContainerType, dim> &sys) {
-  double volume = 1.0;
-  for ( int k = 0; k < dim; k++ ) {
-    volume *= sys.box.hi[k]-sys.box.lo[k];
-  }
+   double volume = 1.0;
+   for (int k = 0; k < dim; k++) {
+      volume *= sys.box.hi[k] - sys.box.lo[k];
+   }
 
-  double sum = 0.0;
-  sys.particles.map([&sum](Particle<dim> &p) {
-    double vv = 0.0;            // dot product of velocity
-    double qf = 0.0;            // dot product of position and force
-    for ( int k = 0; k < dim; k++ ) {
-      vv += std::pow(p.v[k], 2);
-      qf += p.x[k]*p.f[k];
-    }
-    sum += 0.5*p.m*vv + qf;
-  });
-  return 2.0/(3.0*volume)*sum;
+   double sum = 0.0;
+   sys.particles.map([&sum](Particle<dim> &p) {
+      double vv = 0.0;  // dot product of velocity
+      double qf = 0.0;  // dot product of position and force
+      for (int k = 0; k < dim; k++) {
+         vv += std::pow(p.v[k], 2);
+         qf += p.x[k] * p.f[k];
+      }
+      sum += 0.5 * p.m * vv + qf;
+   });
+   return 2.0 / (3.0 * volume) * sum;
 }
 
-#endif // STATISTICS_H_
+#endif  // STATISTICS_H_
