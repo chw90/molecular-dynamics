@@ -64,11 +64,11 @@ class BoundaryWallReflect : public Boundary<ContainerType, dim> {
             } else {
                if (dlo < 0.0) {
                   p.x[k] -= 2 * dlo;  // move particle back into box by the overshoot
-                  p.v[k] = -p.v[k];   // flip velocity componen
+                  p.v[k] = -p.v[k];   // flip velocity component
                }
                if (dhi < 0.0) {
                   p.x[k] += 2 * dhi;  // move particle back into box by the overshoot
-                  p.v[k] = -p.v[k];   // flip velocity componen
+                  p.v[k] = -p.v[k];   // flip velocity component
                }
             }
          }
