@@ -23,11 +23,14 @@ System<ContainerType, DIM> set_system() {
    hi.fill(upper);
    auto b = Box<DIM>(lo, hi);
 
-   // initialize particles with Maxwell-Boltzmann distributed velocity magnitudes
-   auto separation = 1e-2 * (upper - lower);  // initial minimum distance of particles to box bounds
-   auto standard_deviation = std::sqrt(kb * T / m);
    auto &reng = RandomGenerator::engine;
+
+   // uniformly random distributed positions
+   auto separation = 1e-2 * (upper - lower);  // initial minimum wall distance
    std::uniform_real_distribution<double> position_component(lower + separation, upper - separation);
+
+   // Maxwell-Boltzmann distributed velocity magnitudes
+   auto standard_deviation = std::sqrt(kb * T / m);
    std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
    ContainerType p;
