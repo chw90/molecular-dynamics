@@ -69,27 +69,27 @@ int main() {
    auto options = set_options();
 
    // set potential
-   // auto potential = PotentialNone();
-   auto potential = PotentialLJ<DIM>(0.394e-9, 3.204353268e-21);
+   auto potential = PotentialNone();
+   // auto potential = PotentialLJ<DIM>(0.394e-9, 3.204353268e-21);
 
    // set field
    auto field = FieldNone<DIM>();
    // auto field = FieldGravity({1.0e14, 0.0, 0.0});
 
    // set boundary
-   // auto boundary = BoundaryWallHarmonic(1.0, 1e-2); //
-   auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
+   auto boundary = BoundaryWallHarmonic<ContainerType, DIM>(1.0, 1e-2);  //
+   // auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
 
    // set thermostat
    auto thermostat = ThermostatNone<ContainerType, DIM>();
-   // auto thermostat = ThermostatWoodcock(325.0, 10);
-   // auto thermostat = ThermostatBehrendsen(325.0, 0.5, 10);
-   // auto thermostat = ThermostatGauss(1);
-   // auto thermostat = ThermostatAndersen(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
+   // auto thermostat = ThermostatWoodcock<ContainerType, DIM>(325.0, 10);
+   // auto thermostat = ThermostatBehrendsen<ContainerType, DIM>(325.0, 0.5, 10);
+   // auto thermostat = ThermostatGauss<ContainerType, DIM>(1);
+   // auto thermostat = ThermostatAndersen<ContainerType, DIM>(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
 
    // set barostat
    auto barostat = BarostatNone<ContainerType, DIM>();
-   // auto barostat = BarostatBehrendsen(2e-3, 30.0, 20*opt.dt, 1);
+   // auto barostat = BarostatBehrendsen<ContainerType, DIM>(2e-3, 30.0, 20*opt.dt, 1);
 
    // set integrator
    auto integrator = IntegratorVelocityVerlet<ContainerType, DIM>(potential, boundary, field, thermostat, barostat);
