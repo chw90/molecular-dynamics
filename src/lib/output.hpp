@@ -33,10 +33,10 @@ void dump(System<ContainerType, dim> &sys, Options &opt, unsigned &step) {
    opt.df << "ITEM: BOX BOUNDS ff ff ff" << '\n';
    for (int k = 0; k < dim; k++) {
       opt.df << sys.box.lo[k] << " " << sys.box.hi[k];
-      if constexpr (dim == 2) opt.df << " " << 0.0;
+      // if constexpr (dim == 2) opt.df << " " << 0.0;
       opt.df << '\n';
    }
-   if constexpr (dim == 2) opt.df << 0.0 << " " << 0.0 << " " << 0.0 << '\n';
+   if constexpr (dim == 2) opt.df << 0.0 << " " << 0.0 << " " << '\n';  // 0.0 << '\n';
 
    // particle data
    opt.df << "ITEM: ATOMS id type x y z vx vy vz" << '\n';
