@@ -51,6 +51,7 @@ with open(args.filepath) as f:
             mean.plot(ax=axes[1], x='time', y='temperature', legend=False)
             mean.plot(ax=axes[2], x='time', y='pressure', legend=False)
 
-    sep = 0.05
-    plt.subplots_adjust(left=sep, right=1 - sep, top=1 - sep, bottom=sep)
+    hsep = 0.05
+    vsep = 0.1
+    plt.subplots_adjust(left=hsep, right=1 - hsep, top=1 - vsep, bottom=vsep)
     plt.show()
