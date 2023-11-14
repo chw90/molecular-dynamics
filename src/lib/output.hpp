@@ -61,7 +61,7 @@ void dump(System<ContainerType, dim> &sys, Options &opt, unsigned &step) {
    });
 
    // flush output stream
-   std::cout << std::flush;
+   opt.df.flush();
 }
 
 #endif  // OUTPUT_H_
