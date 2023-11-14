@@ -6,6 +6,7 @@
 #include <cmath>
 #include <fstream>
 #include <list>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -331,6 +332,9 @@ class Options {
    int freq;                   // output dump frequency
    Options(double dt, double ts, double te, std::string outfile, int freq) : dt(dt), ts(ts), te(te), outfile(outfile), freq(freq) {
       df.open(outfile);
+      if (!df) {
+         throw std::runtime_error("Options: Could not open output dump file.");
+      }
    };
 };
 
