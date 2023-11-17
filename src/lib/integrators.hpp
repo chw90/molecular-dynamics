@@ -64,9 +64,8 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
       unsigned i = 0;   // timestep counter
       auto t = opt.ts;  // time
 
-      dump(sys, opt, i);  // dump initial particle data to disk
-
       update_forces(sys, opt, i);
+      dump(sys, opt, i);  // dump initial particle data to disk
       // iterate over timesteps
       while (t < opt.te) {
          i += 1;

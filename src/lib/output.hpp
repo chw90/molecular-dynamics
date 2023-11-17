@@ -39,7 +39,7 @@ void dump(System<ContainerType, dim> &sys, Options &opt, unsigned &step) {
    if constexpr (dim == 2) opt.df << 0.0 << " " << 0.0 << " " << '\n';  // 0.0 << '\n';
 
    // particle data
-   opt.df << "ITEM: ATOMS id type x y z vx vy vz" << '\n';
+   opt.df << "ITEM: ATOMS id type x y z vx vy vz fx fy fz" << '\n';
    int l = 0;
    // for ( auto p: sys.particles) {
    sys.particles.map([&l, &opt](Particle<dim> &p) {
@@ -53,6 +53,11 @@ void dump(System<ContainerType, dim> &sys, Options &opt, unsigned &step) {
       // velocity
       for (int k = 0; k < dim; k++) {
          opt.df << " " << p.v[k];
+      }
+      if constexpr (dim == 2) opt.df << " " << 0.0;
+      // force
+      for (int k = 0; k < dim; k++) {
+         opt.df << " " << p.f[k];
       }
       if constexpr (dim == 2) opt.df << " " << 0.0;
       opt.df << '\n';
