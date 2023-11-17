@@ -61,7 +61,7 @@ class PotentialLJ : public Potential<dim> {
       // compute pair forces
       auto r = distance(pi, pj);
       auto s = std::pow(sigma / r, 6);
-      auto prefactor = 24.0 * epsilon * s / r * (1.0 - 2.0 * s);
+      auto prefactor = 24.0 * epsilon * s / std::pow(r, 2) * (1.0 - 2.0 * s);
       for (int k = 0; k < dim; k++) {
          auto f = prefactor * (pj.x[k] - pi.x[k]);
          pi.f[k] += f;

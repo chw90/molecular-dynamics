@@ -119,7 +119,6 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
       sys.particles.map_pairwise([&pot = pot](Particle<dim> &pi, Particle<dim> &pj) {
          pot.evaluate(pi, pj);
       });
-
       // apply thermostat
       if (step % tstat.step == 0) {
          tstat.apply_forces(sys);
