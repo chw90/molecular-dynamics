@@ -7,15 +7,15 @@
 
 using ContainerType = ContainerVector<2>;
 
-double const sigma = 0.394e-9;
-double const epsilon = 3.204353268e-21;
+double const sigma = 3.949;
+double const epsilon = 0.44938637113026;
 double const d_eq = std::pow(2, 1.0 / 6.0) * sigma;  // equilibrium atom distance
 
 System<ContainerType, 2>
 set_system() {
    // set constants
-   double const kb = 1.380649e-23;          // Boltzmann constant
-   double const m = 2.180171556711138e-25;  // mass
+   double const kb = 1.987204259e-3;  // Boltzmann constant
+   double const m = 131.293;          // mass
 
    // initialize bounding box
    double const lower = -2.5 * d_eq;
@@ -27,8 +27,8 @@ set_system() {
 
    ContainerType p;
 
-   auto p1 = Particle<2>(1, m, {-2.0 * d_eq, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});
-   auto p2 = Particle<2>(2, m, {+2.0 * d_eq, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});
+   auto p1 = Particle<2>(1, m, {-0.5 * d_eq, 0.0}, {0.0 * d_eq, 0.0}, {0.0, 0.0}, {0.0, 0.0});
+   auto p2 = Particle<2>(1, m, {+0.5 * d_eq, 0.0}, {0.0 * d_eq, 0.0}, {0.0, 0.0}, {0.0, 0.0});
 
    p.insert(p1);
    p.insert(p2);
@@ -39,9 +39,9 @@ set_system() {
 
 Options set_options() {
    // set time stepping options
-   double dt = 1e-6;
+   double dt = 2.0;
    double ts = 0.0;
-   double te = 1000 * dt;
+   double te = 100 * dt;
 
    // set output options
    int freq = 1;
