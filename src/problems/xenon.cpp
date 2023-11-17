@@ -25,11 +25,29 @@ System<ContainerType, DIM> set_system() {
 
    auto &reng = RandomGenerator::engine;
 
-   // uniformly random distributed positions
-   auto separation = 1e-2 * (upper - lower);  // initial minimum wall distance
-   std::uniform_real_distribution<double> position_component(lower + separation, upper - separation);
+   // define lattice
+   auto const margin = 1e-2 * (upper - lower);                          // lattice to wall distance
+   auto const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
+   double const a = (upper - lower - 2 * margin) / (n - 1);             // lattice constant
 
-   // Maxwell-Boltzmann distributed velocity magnitudes
+   // lambda function to compute lattice indices from linear particle index li
+   auto indices = [&n](int li) {
+      if constexpr (DIM == 2) {
+         auto j = li / n;
+         auto i = (li - j * n);
+         std::array<int, 2> index_array = {i, j};
+         return index_array;
+      }
+      if constexpr (DIM == 3) {
+         auto k = li / (n * n);
+         auto j = (li - k * n * n) / n;
+         auto i = (li - k * n * n - j * n);
+         std::array<int, 3> index_array = {i, j, k};
+         return index_array;
+      }
+   };
+
+   // normal distribution for velocity components
    auto standard_deviation = std::sqrt(kb * T / m);
    std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
@@ -37,8 +55,9 @@ System<ContainerType, DIM> set_system() {
 
    for (int i = 0; i < N; i++) {
       auto pi = Particle<DIM>(1, m);
+      auto index = indices(i);
       for (int k = 0; k < DIM; k++) {
-         pi.x[k] = position_component(reng);
+         pi.x[k] = b.lo[k] + margin + index[k] * a;
          pi.v[k] = velocity_component(reng);
       }
       p.insert(pi);
