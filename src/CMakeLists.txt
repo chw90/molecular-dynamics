@@ -11,6 +11,6 @@ link_libraries(
 add_executable(tests tests/tests.cpp)
 
 add_executable(planets problems/planets.cpp)
-add_executable(xenon problems/xenon.cpp)
-add_executable(xenon_cell problems/xenon_cell.cpp)
+add_executable(argon problems/argon.cpp)
+add_executable(argon_cell problems/argon_cell.cpp)
 add_executable(collision problems/collision.cpp)

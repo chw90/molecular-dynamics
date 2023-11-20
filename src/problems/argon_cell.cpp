@@ -5,19 +5,22 @@
 #include "potentials.hpp"
 #include "thermostats.hpp"
 
-using ContainerType = ContainerVector<DIM>;
+using ContainerType = ContainerCells<DIM>;
+
+double const kb = 1.380649e-23;                // Boltzmann constant
+double const sigma = 3.405e-10;                // Lennard-Jones parameter
+double const epsilon = 4.462713222930379e-20;  // Lennard-Jones parameter
 
 System<ContainerType, DIM> set_system() {
    // set constants
-   double const kb = 1.380649e-23;          // Boltzmann constant
-   double const m = 2.180171556711138e-25;  // mass
-   double const T = 293.15;                 // initial temperature
+   double const m = 6.633521795361493e-26;  // mass
+   double const T = 300;                    // initial temperature
    double const P = 1e5;                    // initial pressure
-   int const N = std::pow(9, DIM);          // number of particles
+   int const N = std::pow(10, DIM);         // number of particles
 
    // initialize bounding box
    double const lower = 0.0;
-   auto const upper = std::pow(N * kb * T / P, 1.0 / 3.0);  // box edge length
+   auto const upper = std::pow(N * kb * T / P, 1.0 / DIM);  // box edge length
    std::array<double, DIM> lo, hi;
    lo.fill(lower);
    hi.fill(upper);
@@ -51,7 +54,7 @@ System<ContainerType, DIM> set_system() {
    auto standard_deviation = std::sqrt(kb * T / m);
    std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
-   ContainerType p;
+   ContainerType p(b, 3 * sigma, 5);
 
    for (int i = 0; i < N; i++) {
       auto pi = Particle<DIM>(1, m);
@@ -69,15 +72,15 @@ System<ContainerType, DIM> set_system() {
 
 Options set_options() {
    // set time stepping options
-   double dt = 5e-14;
+   double dt = 2.0e-15;
    double ts = 0.0;
    double te = 5000 * dt;
 
    // set output options
-   int freq = 10;
+   int freq = 500;
 
    // construct options
-   return Options(dt, ts, te, "xenon.md", freq);
+   return Options(dt, ts, te, "argon_cell.md", freq);
 }
 
 int main() {
@@ -88,16 +91,17 @@ int main() {
    auto options = set_options();
 
    // set potential
-   auto potential = PotentialNone();
-   // auto potential = PotentialLJ<DIM>(0.394e-9, 3.204353268e-21);
+   // auto potential = PotentialNone();
+   auto potential = PotentialLJ<DIM>(sigma, epsilon);
 
    // set field
    auto field = FieldNone<DIM>();
-   // auto field = FieldGravity({1.0e14, 0.0, 0.0});
+   // auto field = FieldGravity({0.0, 0.0, 0.0});
 
    // set boundary
-   auto boundary = BoundaryWallHarmonic<ContainerType, DIM>(1.0, 1e-2);  //
-   // auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
+   // auto boundary = BoundaryNone<ContainerType, DIM>();
+   // auto boundary = BoundaryWallHarmonic<ContainerType, DIM>(1.0, 1e-2);  //
+   auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
 
    // set thermostat
    auto thermostat = ThermostatNone<ContainerType, DIM>();
