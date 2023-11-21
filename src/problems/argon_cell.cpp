@@ -26,8 +26,6 @@ System<ContainerType, DIM> set_system() {
    hi.fill(upper);
    auto b = Box<DIM>(lo, hi);
 
-   auto &reng = RandomGenerator::engine;
-
    // define lattice
    auto const margin = 1e-2 * (upper - lower);                          // lattice to wall distance
    auto const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
@@ -51,6 +49,7 @@ System<ContainerType, DIM> set_system() {
    };
 
    // normal distribution for velocity components
+   auto &reng = RandomGenerator::engine;
    auto standard_deviation = std::sqrt(kb * T / m);
    std::normal_distribution<double> velocity_component(0.0, standard_deviation);
 
