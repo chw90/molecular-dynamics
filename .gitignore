@@ -1,4 +1,10 @@
 /build/
 /debug/
+.ccls-cache/
+.flake8
 *.dir-locals.el
+*.dump
+*.yaml
+*.lammps
+*.pdf
 compile_commands.json
