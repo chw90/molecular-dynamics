@@ -7,27 +7,27 @@
 
 using ContainerType = ContainerVector<DIM>;
 
-double const kb = 1.380649e-23;                // Boltzmann constant
-double const sigma = 3.405e-10;                // Lennard-Jones parameter
-double const epsilon = 4.462713222930379e-20;  // Lennard-Jones parameter
+double const kb = 1.380649e-23;        // Boltzmann constant
+double const sigma = 3.405e-10;        // Lennard-Jones parameter
+double const epsilon = 1.6567788e-21;  // Lennard-Jones parameter
 
 System<ContainerType, DIM> set_system() {
    // set constants
    double const m = 6.633521795361493e-26;  // mass
-   double const T = 300;                    // initial temperature
-   double const P = 1e5;                    // initial pressure
-   int const N = std::pow(10, DIM);         // number of particles
+   double const T = 293.15;                 // initial temperature
+   double const P = 101325;                 // initial pressure
+   int const N = 100;                       // number of particles
 
    // initialize bounding box
    double const lower = 0.0;
-   auto const upper = std::pow(N * kb * T / P, 1.0 / DIM);  // box edge length
+   auto const upper = std::pow(N * kb * T / P, 1.0 / 3.0);  // box edge length
    std::array<double, DIM> lo, hi;
    lo.fill(lower);
    hi.fill(upper);
    auto b = Box<DIM>(lo, hi);
 
    // define lattice
-   auto const margin = 1e-2 * (upper - lower);                          // lattice to wall distance
+   auto const margin = 2e-2 * (upper - lower);                          // lattice to wall distance
    auto const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
    double const a = (upper - lower - 2 * margin) / (n - 1);             // lattice constant
 
@@ -71,12 +71,12 @@ System<ContainerType, DIM> set_system() {
 
 Options set_options() {
    // set time stepping options
-   double dt = 2.0e-15;
+   double dt = 2e-15;
    double ts = 0.0;
-   double te = 2500 * dt;
+   double te = 10000 * dt;
 
    // set output options
-   int freq = 500;
+   int freq = 50;
 
    // construct options
    return Options(dt, ts, te, "argon.md", freq);
