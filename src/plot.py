@@ -27,9 +27,9 @@ with open(args.filepath) as f:
     df.columns = df.columns.str.strip()
 
     fig, axes = plt.subplots(nrows=1, ncols=3)
-    df.plot(ax=axes[0], x='time', y='kinetic energy', ylabel='Kinetic Energy', legend=False)
-    df.plot(ax=axes[1], x='time', y='temperature', ylabel='Temperature', legend=False)
-    df.plot(ax=axes[2], x='time', y='pressure', ylabel='Pressure', legend=False)
+    df.plot(ax=axes[0], x='time', y='kinetic energy', ylabel='kinetic Energy', legend=False)
+    df.plot(ax=axes[1], x='time', y='temperature', ylabel='temperature', legend=False)
+    df.plot(ax=axes[2], x='time', y='pressure', ylabel='pressure', legend=False)
 
     if args.avg:
         if not args.window:
