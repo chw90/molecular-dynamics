@@ -32,19 +32,19 @@ System<ContainerType, DIM> set_system() {
    double const a = (upper - lower - 2 * margin) / (n - 1);             // lattice constant
 
    // lambda function to compute lattice indices from linear particle index li
-   auto indices = [&n](int li) {
+   auto indices = [&n](int index) {
       if constexpr (DIM == 2) {
-         auto j = li / n;
-         auto i = (li - j * n);
-         std::array<int, 2> index_array = {i, j};
-         return index_array;
+         auto j = index / n;
+         auto i = (index - j * n);
+         std::array<int, 2> indices_2d = {i, j};
+         return indices_2d;
       }
       if constexpr (DIM == 3) {
-         auto k = li / (n * n);
-         auto j = (li - k * n * n) / n;
-         auto i = (li - k * n * n - j * n);
-         std::array<int, 3> index_array = {i, j, k};
-         return index_array;
+         auto k = index / (n * n);
+         auto j = (index - k * n * n) / n;
+         auto i = (index - k * n * n - j * n);
+         std::array<int, 3> indices_3d = {i, j, k};
+         return indices_3d;
       }
    };
 
