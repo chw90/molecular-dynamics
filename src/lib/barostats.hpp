@@ -26,14 +26,14 @@ class BarostatNone : public Barostat<ContainerType, dim> {
 };
 
 template <typename ContainerType, int dim = DIM>
-class BarostatBehrendsen : public Barostat<ContainerType, dim> {
-   // isotropic Behrendsen barostat
+class BarostatBerendsen : public Barostat<ContainerType, dim> {
+   // isotropic Berendsen barostat
    double const target;  // target pressure
    double const beta;    // isothermal compressibility
    double const relax;   // relaxation time
    public:
    int const step;  // apply thermostat every step steps
-   BarostatBehrendsen(double target, double beta, double relax, int step) : target(target), beta(beta), relax(relax), step(step){};
+   BarostatBerendsen(double target, double beta, double relax, int step) : target(target), beta(beta), relax(relax), step(step){};
    void apply(System<ContainerType, dim> &sys, Options const &opt) {
       auto press = pressure(sys);
       auto eta = 1 - beta * opt.dt / relax * (target - press);

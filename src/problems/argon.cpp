@@ -105,13 +105,13 @@ int main() {
    // set thermostat
    auto thermostat = ThermostatNone<ContainerType, DIM>();
    // auto thermostat = ThermostatWoodcock<ContainerType, DIM>(325.0, 10);
-   // auto thermostat = ThermostatBehrendsen<ContainerType, DIM>(325.0, 0.5, 10);
+   // auto thermostat = ThermostatBerendsen<ContainerType, DIM>(325.0, 0.5, 10);
    // auto thermostat = ThermostatGauss<ContainerType, DIM>(1);
    // auto thermostat = ThermostatAndersen<ContainerType, DIM>(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
 
    // set barostat
    auto barostat = BarostatNone<ContainerType, DIM>();
-   // auto barostat = BarostatBehrendsen<ContainerType, DIM>(2e-3, 30.0, 20*opt.dt, 1);
+   // auto barostat = BarostatBerendsen<ContainerType, DIM>(2e-3, 30.0, 20*opt.dt, 1);
 
    // set integrator
    auto integrator = IntegratorVelocityVerlet<ContainerType, DIM>(potential, boundary, field, thermostat, barostat);

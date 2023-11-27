@@ -49,13 +49,13 @@ class ThermostatWoodcock : public Thermostat<ContainerType, dim> {
 };
 
 template <typename ContainerType, int dim = DIM>
-class ThermostatBehrendsen : public Thermostat<ContainerType, dim> {
-   // Behrendsen thermostat
+class ThermostatBerendsen : public Thermostat<ContainerType, dim> {
+   // Berendsen thermostat
    double const target;   // target temperature
    double const damping;  // damping parameter
    public:
    int const step;
-   ThermostatBehrendsen(double target, double damping, int step) : target(target), damping(damping), step(step){};
+   ThermostatBerendsen(double target, double damping, int step) : target(target), damping(damping), step(step){};
    void apply_forces(System<ContainerType, dim> &sys){};
    void apply_velocities(System<ContainerType, dim> &sys) {
       auto temp = temperature(sys, kinetic_energy(sys));
