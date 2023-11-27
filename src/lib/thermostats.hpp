@@ -119,10 +119,10 @@ class ThermostatAndersen : public Thermostat<ContainerType, dim> {
    void apply_forces(System<ContainerType, dim> &sys){};
    void apply_velocities(System<ContainerType, dim> &sys) {
       // determine number of particles to modify
-      std::uniform_int_distribution<size_t> index(0, sys.particles.size());
       auto np = std::floor(rate * sys.particles.size());
+      // pick np random particles and override their velocities
+      std::uniform_int_distribution<size_t> index(0, sys.particles.size());
       for (int i = 0; i < np; i++) {
-         // pick random particle
          auto &p = sys.particles.get_random_particle();
          for (int k = 0; k < dim; k++) {
             // override velocity component
