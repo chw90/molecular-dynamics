@@ -32,7 +32,7 @@ class BarostatBerendsen : public Barostat<ContainerType, dim> {
    double const beta;    // isothermal compressibility
    double const relax;   // relaxation time
    public:
-   int const step;  // apply thermostat every step steps
+   int const step;
    BarostatBerendsen(double target, double beta, double relax, int step) : target(target), beta(beta), relax(relax), step(step){};
    void apply(System<ContainerType, dim> &sys, Options const &opt) {
       auto press = pressure(sys);
