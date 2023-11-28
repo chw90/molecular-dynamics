@@ -2,6 +2,7 @@
 #define BAROSTATS_H_
 
 #include <cmath>
+#include <limits>
 
 #include "containers.hpp"
 #include "globals.hpp"
@@ -21,7 +22,7 @@ template <typename ContainerType, int dim = DIM>
 class BarostatNone : public Barostat<ContainerType, dim> {
    // no barostatting
    public:
-   BarostatNone() : Barostat<ContainerType, dim>(0){};
+   BarostatNone() : Barostat<ContainerType, dim>(std::numeric_limits<unsigned>::max()){};
    void apply(System<ContainerType, dim> &sys, Options const &opt){};
 };
 

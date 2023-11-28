@@ -2,6 +2,7 @@
 #define THERMOSTATS_H_
 
 #include <cmath>
+#include <limits>
 #include <random>
 
 #include "containers.hpp"
@@ -23,7 +24,7 @@ template <typename ContainerType, int dim = DIM>
 class ThermostatNone : public Thermostat<ContainerType, dim> {
    // no thermostatting
    public:
-   ThermostatNone() : Thermostat<ContainerType, dim>(0){};
+   ThermostatNone() : Thermostat<ContainerType, dim>(std::numeric_limits<unsigned>::max()){};
    void apply_forces(System<ContainerType, dim> &sys){};
    void apply_velocities(System<ContainerType, dim> &sys){};
 };
