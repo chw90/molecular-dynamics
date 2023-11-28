@@ -32,11 +32,7 @@ template <typename ContainerType, int dim = DIM>
 class IntegratorStroemerVerlet : public Integrator<ContainerType, dim> {
    protected:
    using base = Integrator<ContainerType, dim>;
-   using base::bound;
-   using base::bstat;
-   using base::field;
-   using base::pot;
-   using base::tstat;
+   using base::bound, base::bstat, base::field, base::pot, base::tstat;
 
    public:
    IntegratorStroemerVerlet(Potential<dim> &pot, Boundary<ContainerType, dim> &bound, Field<dim> &field, Thermostat<ContainerType, dim> &tstat, Barostat<ContainerType, dim> &bstat) : base::Integrator(pot, bound, field, tstat, bstat){};
@@ -49,14 +45,10 @@ template <typename ContainerType, int dim = DIM>
 class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
    protected:
    using base = Integrator<ContainerType, dim>;
-   using base::bound;
-   using base::bstat;
-   using base::field;
-   using base::pot;
-   using base::tstat;
+   using base::bound, base::bstat, base::field, base::pot, base::tstat;
 
    public:
-   IntegratorVelocityVerlet(Potential<dim> &pot, Boundary<ContainerType, dim> &bound, Field<dim> &field, Thermostat<ContainerType, dim> &tstat, Barostat<ContainerType, dim> &bstat) : Integrator<ContainerType, dim>::Integrator(pot, bound, field, tstat, bstat){};
+   IntegratorVelocityVerlet(Potential<dim> &pot, Boundary<ContainerType, dim> &bound, Field<dim> &field, Thermostat<ContainerType, dim> &tstat, Barostat<ContainerType, dim> &bstat) : base::Integrator(pot, bound, field, tstat, bstat){};
    void run(System<ContainerType, dim> &sys, Options &opt) {
       // integrate using the velocity Verlet scheme
       print_header();  // table header for statistics output
@@ -134,11 +126,7 @@ template <typename ContainerType, int dim = DIM>
 class IntegratorPositionVerlet : public Integrator<ContainerType, dim> {
    protected:
    using base = Integrator<ContainerType, dim>;
-   using base::bound;
-   using base::bstat;
-   using base::field;
-   using base::pot;
-   using base::tstat;
+   using base::bound, base::bstat, base::field, base::pot, base::tstat;
 
    public:
    IntegratorPositionVerlet(Potential<dim> &pot, Boundary<ContainerType, dim> &bound, Field<dim> &field, Thermostat<ContainerType, dim> &tstat, Barostat<ContainerType, dim> &bstat) : base::Integrator(pot, bound, field, tstat, bstat){};
@@ -151,11 +139,7 @@ template <typename ContainerType, int dim = DIM>
 class IntegratorLeapfrogVerlet : public Integrator<ContainerType, dim> {
    protected:
    using base = Integrator<ContainerType, dim>;
-   using base::bound;
-   using base::bstat;
-   using base::field;
-   using base::pot;
-   using base::tstat;
+   using base::bound, base::bstat, base::field, base::pot, base::tstat;
 
    public:
    IntegratorLeapfrogVerlet(Potential<dim> &pot, Boundary<ContainerType, dim> &bound, Field<dim> &field, Thermostat<ContainerType, dim> &tstat, Barostat<ContainerType, dim> &bstat) : base::Integrator(pot, bound, field, tstat, bstat){};
