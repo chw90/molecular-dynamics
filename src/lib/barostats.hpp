@@ -12,7 +12,8 @@ template <typename ContainerType, int dim = DIM>
 class Barostat {
    // abstract base class for barostats
    public:
-   int const step = 1;                                                           // apply thermostat every step steps
+   int const step;  // apply thermostat every step steps
+   Barostat(int step) : step(step){};
    virtual void apply(System<ContainerType, dim> &sys, Options const &opt) = 0;  // apply via general system modification
 };
 
@@ -20,8 +21,7 @@ template <typename ContainerType, int dim = DIM>
 class BarostatNone : public Barostat<ContainerType, dim> {
    // no barostatting
    public:
-   int const step = 1;  // apply thermostat every step steps
-   BarostatNone() : step(0){};
+   BarostatNone() : Barostat<ContainerType, dim>(0){};
    void apply(System<ContainerType, dim> &sys, Options const &opt){};
 };
 
@@ -32,8 +32,7 @@ class BarostatBerendsen : public Barostat<ContainerType, dim> {
    double const beta;    // isothermal compressibility
    double const relax;   // relaxation time
    public:
-   int const step;
-   BarostatBerendsen(double target, double beta, double relax, int step) : target(target), beta(beta), relax(relax), step(step){};
+   BarostatBerendsen(double target, double beta, double relax, int step) : target(target), beta(beta), relax(relax), Barostat<ContainerType, dim>(step){};
    void apply(System<ContainerType, dim> &sys, Options const &opt) {
       auto press = pressure(sys);
       auto eta = 1 - beta * opt.dt / relax * (target - press);
