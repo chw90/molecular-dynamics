@@ -13,8 +13,8 @@ template <typename ContainerType, int dim = DIM>
 class Thermostat {
    // abstract base class for thermostats
    public:
-   int const step;  // apply thermostat every step steps
-   Thermostat(int step) : step(step){};
+   unsigned const step;  // apply thermostat every step steps
+   Thermostat(unsigned step) : step(step){};
    virtual void apply_forces(System<ContainerType, dim> &sys) = 0;      // apply via forces
    virtual void apply_velocities(System<ContainerType, dim> &sys) = 0;  // apply via velocity modification
 };
@@ -33,7 +33,7 @@ class ThermostatWoodcock : public Thermostat<ContainerType, dim> {
    // Woodcock thermostat
    double const target;  // target temperature
    public:
-   ThermostatWoodcock(double target, int step) : target(target), Thermostat<ContainerType, dim>(step){};
+   ThermostatWoodcock(double target, unsigned step) : target(target), Thermostat<ContainerType, dim>(step){};
    void apply_forces(System<ContainerType, dim> &sys){};
    void apply_velocities(System<ContainerType, dim> &sys) {
       auto temp = temperature(sys, kinetic_energy(sys));
@@ -53,7 +53,7 @@ class ThermostatBerendsen : public Thermostat<ContainerType, dim> {
    double const target;   // target temperature
    double const damping;  // damping parameter
    public:
-   ThermostatBerendsen(double target, double damping, int step) : target(target), damping(damping), Thermostat<ContainerType, dim>(step){};
+   ThermostatBerendsen(double target, double damping, unsigned step) : target(target), damping(damping), Thermostat<ContainerType, dim>(step){};
    void apply_forces(System<ContainerType, dim> &sys){};
    void apply_velocities(System<ContainerType, dim> &sys) {
       auto temp = temperature(sys, kinetic_energy(sys));
@@ -71,7 +71,7 @@ template <typename ContainerType, int dim = DIM>
 class ThermostatGauss : public Thermostat<ContainerType, dim> {
    // Gauss thermostat
    public:
-   ThermostatGauss(int step) : Thermostat<ContainerType, dim>(step){};
+   ThermostatGauss(unsigned step) : Thermostat<ContainerType, dim>(step){};
    void apply_forces(System<ContainerType, dim> &sys) {
       // NOTE:
       // Must be called *after* the particle forces are set according
@@ -108,7 +108,7 @@ class ThermostatAndersen : public Thermostat<ContainerType, dim> {
    double stddev;                        // standard deviation for velocity components
    std::normal_distribution<double> vc;  // random number generator for velocity components
    public:
-   ThermostatAndersen(double target, double mass, double kb, double rate, double step) : target(target), mass(mass), kb(kb), rate(rate), Thermostat<ContainerType, dim>(step) {
+   ThermostatAndersen(double target, double mass, double kb, double rate, unsigned step) : target(target), mass(mass), kb(kb), rate(rate), Thermostat<ContainerType, dim>(step) {
       stddev = std::sqrt(kb * target / mass);
       vc = std::normal_distribution<double>(0.0, stddev);
    };
