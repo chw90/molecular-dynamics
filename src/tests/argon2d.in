@@ -58,7 +58,7 @@ velocity all create $T 1234 mom yes rot yes dist gaussian
 
 # Thermodynamic (global) data: output to the screen and log files
 thermo ${n_output}
-thermo_style custom step ke temp press vol lx ly lz
+thermo_style custom step time etotal ke pe temp press vol # lx ly lz
 
 # Averaged thermodynamic data: output to yaml files
 fix 1 all ave/time 1 500 500 c_thermo_temp c_thermo_press file av_temp_press.yaml
