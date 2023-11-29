@@ -21,14 +21,14 @@ template <int dim = DIM>
 class Potential {
    // abstract base class for potentials
    public:
-   virtual void evaluate(Particle<dim> &pi, Particle<dim> &pj) = 0;
+   virtual double evaluate(Particle<dim> &pi, Particle<dim> &pj) = 0;
 };
 
 template <int dim = DIM>
 class PotentialNone : public Potential<dim> {
    // no potential
    public:
-   void evaluate(Particle<dim> &pi, Particle<dim> &pj){};
+   double evaluate(Particle<dim> &pi, Particle<dim> &pj) { return 0; };
 };
 
 template <int dim = DIM>
@@ -37,8 +37,8 @@ class PotentialGravitation : public Potential<dim> {
    double const gamma;  // gravitational constant
    public:
    PotentialGravitation(double gamma) : gamma(gamma){};
-   void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
-      // compute pair forces
+   double evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute and apply pair forces
       auto r = distance(pi, pj);
       auto prefactor = gamma * pi.m * pj.m / std::pow(r, 3);
       for (int k = 0; k < dim; k++) {
@@ -46,6 +46,9 @@ class PotentialGravitation : public Potential<dim> {
          pi.f[k] += f;
          pj.f[k] -= f;
       };
+      // compute potential energy
+      auto epot = -gamma * pi.m * pj.m / r;
+      return epot;
    };
 };
 
@@ -57,8 +60,8 @@ class PotentialLJ : public Potential<dim> {
 
    public:
    PotentialLJ(double sigma, double epsilon) : sigma(sigma), epsilon(epsilon){};
-   void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
-      // compute pair forces
+   double evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute and apply pair forces
       auto r = distance(pi, pj);
       auto s = std::pow(sigma / r, 6);
       auto prefactor = 24.0 * epsilon * s / std::pow(r, 2) * (1.0 - 2.0 * s);
@@ -67,6 +70,9 @@ class PotentialLJ : public Potential<dim> {
          pi.f[k] += f;
          pj.f[k] -= f;
       }
+      // compute potential energy
+      auto epot = 4 * epsilon * s * (s - 1);
+      return epot;
    };
 };
 
@@ -80,8 +86,8 @@ class PotentialMie : public Potential<dim> {
 
    public:
    PotentialMie(double n, double m, double cn, double cm) : n(n), m(m), cn(cn), cm(cm){};
-   void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
-      // compute pair forces
+   double evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute and apply pair forces
       auto r = distance(pi, pj);
       auto prefactor = n * cn * std::pow(r, -n - 2) + m * cm * std::pow(r, m - 2);
       for (int k = 0; k < dim; k++) {
@@ -89,6 +95,9 @@ class PotentialMie : public Potential<dim> {
          pi.f[k] += f;
          pj.f[k] -= f;
       }
+      // compute potential energy
+      auto epot = cn / std::pow(r, n) - cm / std::pow(r, m);
+      return epot;
    };
 };
 
@@ -101,8 +110,8 @@ class PotentialMorse : public Potential<dim> {
 
    public:
    PotentialMorse(double de, double a, double re) : de(de), a(a), re(re){};
-   void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
-      // compute pair forces
+   double evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute and apply pair forces
       auto r = distance(pi, pj);
       auto e = std::exp(-a * (r - re));
       auto prefactor = 2.0 * a * de / r * e * (1.0 - e);
@@ -111,6 +120,9 @@ class PotentialMorse : public Potential<dim> {
          pi.f[k] += f;
          pj.f[k] -= f;
       }
+      // compute potential energy
+      auto epot = de * std::pow(1 - std::exp(-a * (r - re)), 2);
+      return epot;
    };
 };
 
@@ -123,8 +135,8 @@ class PotentialBuckingham : public Potential<dim> {
 
    public:
    PotentialBuckingham(double a, double b, double c) : a(a), b(b), c(c){};
-   void evaluate(Particle<dim> &pi, Particle<dim> &pj) {
-      // compute pair forces
+   double evaluate(Particle<dim> &pi, Particle<dim> &pj) {
+      // compute and apply pair forces
       auto r = distance(pi, pj);
       auto prefactor = -a * b / r * std::exp(-b * r) + 6 * c * std::pow(r, -8);
       for (int k = 0; k < dim; k++) {
@@ -132,6 +144,9 @@ class PotentialBuckingham : public Potential<dim> {
          pi.f[k] += f;
          pj.f[k] -= f;
       }
+      // compute potential energy
+      auto epot = a * std::exp(-b * r) - c / std::pow(r, 6);
+      return epot;
    };
 };
 
@@ -141,8 +156,8 @@ class PotentialCoulomb : public Potential<dim> {
    double const epsilon_0;  // dielectric constant
    public:
    PotentialCoulomb(double epsilon_0) : epsilon_0(epsilon_0){};
-   void evaluate(ParticleCharged<dim> &pi, ParticleCharged<dim> &pj) {
-      // compute pair forces
+   double evaluate(ParticleCharged<dim> &pi, ParticleCharged<dim> &pj) {
+      // compute and apply pair forces
       auto r = distance(pi, pj);
       auto prefactor = -1.0 / (4 * std::numbers::pi * epsilon_0) * pi.q * pj.q / std::pow(r, 3);
       for (int k = 0; k < dim; k++) {
@@ -150,6 +165,9 @@ class PotentialCoulomb : public Potential<dim> {
          pi.f[k] += f;
          pj.f[k] -= f;
       }
+      // compute potential energy
+      auto epot = 1.0 / (4 * std::numbers::pi * epsilon_0) * pi.q * pj.q / r;
+      return epot;
    };
 };
 

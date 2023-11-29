@@ -66,7 +66,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
          update_positions(sys, opt, i);
          bound.apply(sys);
          if (i % sys.particles.rebuild_freq == 0) sys.particles.neighbor_build(sys.box);
-         update_forces(sys, opt, i);
+         auto epot = update_forces(sys, opt, i);
          update_velocities(sys, opt, i);
 
          // print statistics to stdout and dump particle data to disk
@@ -101,14 +101,15 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
          tstat.apply_velocities(sys);
       }
    }
-   void update_forces(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step) {
+   double update_forces(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step) {
       // reset forces
       sys.particles.map([](Particle<dim> &p) {
          p.f.fill(0.0);
       });
       // evaluate potential
-      sys.particles.map_pairwise([&pot = pot](Particle<dim> &pi, Particle<dim> &pj) {
-         pot.evaluate(pi, pj);
+      double epot = 0.0;  // potential energy
+      sys.particles.map_pairwise([&pot = pot, &epot](Particle<dim> &pi, Particle<dim> &pj) {
+         epot += pot.evaluate(pi, pj);
       });
       // apply thermostat
       if (step % tstat.step == 0) {
@@ -119,6 +120,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
          field.apply(p);
          bound.apply_forces(p, sys.box);
       });
+      return epot;
    }
 };
 
