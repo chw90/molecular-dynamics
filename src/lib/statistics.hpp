@@ -9,31 +9,33 @@
 
 void print_header() {
    // print the table header for the output of print_statistics
-   print("step", "time", "kinetic energy", "temperature", "pressure");
+   print("step", "time", "total energy", "kinetic energy", "potential energy", "temperature", "pressure", "volume");
 }
 
 template <typename ContainerType, int dim = DIM>
-void print_statistics(System<ContainerType, dim> &sys, int const &i, double const &t) {
-   auto e_kin = kinetic_energy(sys);
-   auto temp = temperature(sys, e_kin);
+void print_statistics(System<ContainerType, dim> &sys, double epot, int const i, double const t) {
+   auto ekin = kinetic_energy(sys);
+   auto etot = ekin + epot;
+   auto temp = temperature(sys, ekin);
    auto press = pressure(sys);
-   print(i, t, e_kin, temp, press);
+   auto vol = volume(sys);
+   print(i, t, etot, ekin, epot, temp, press, vol);
 }
 
 template <typename ContainerType, int dim = DIM>
 double kinetic_energy(System<ContainerType, dim> &sys) {
-   double e_kin = 0.0;
-   sys.particles.map([&e_kin](Particle<dim> &p) {
+   double ekin = 0.0;
+   sys.particles.map([&ekin](Particle<dim> &p) {
       for (auto vi : p.v) {
-         e_kin += 0.5 * p.m * std::pow(vi, 2);
+         ekin += 0.5 * p.m * std::pow(vi, 2);
       }
    });
-   return e_kin;
+   return ekin;
 }
 
 template <typename ContainerType, int dim = DIM>
-double temperature(System<ContainerType, dim> &sys, double const e_kin) {
-   return 2.0 / (dim * sys.constants.kb * sys.particles.size()) * e_kin;
+double temperature(System<ContainerType, dim> &sys, double const ekin) {
+   return 2.0 / (dim * sys.constants.kb * sys.particles.size()) * ekin;
 }
 
 template <typename ContainerType, int dim = DIM>
@@ -54,6 +56,15 @@ double pressure(System<ContainerType, dim> &sys) {
       sum += 0.5 * p.m * vv + qf;
    });
    return 2.0 / (3.0 * volume) * sum;
+}
+
+template <typename ContainerType, int dim = DIM>
+double volume(System<ContainerType, dim> &sys) {
+   double vol = 1.0;
+   for (int k = 0; k < dim; k++) {
+      vol *= sys.box.hi[k] - sys.box.lo[k];
+   }
+   return vol;
 }
 
 #endif  // STATISTICS_H_

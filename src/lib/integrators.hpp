@@ -70,7 +70,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
          update_velocities(sys, opt, i);
 
          // print statistics to stdout and dump particle data to disk
-         print_statistics(sys, i, t);
+         print_statistics(sys, epot, i, t);
          if (i % opt.freq == 0) dump(sys, opt, i);
       }
    }
