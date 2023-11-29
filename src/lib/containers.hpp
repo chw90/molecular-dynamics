@@ -5,6 +5,7 @@
 #include <boost/multi_array.hpp>
 #include <cmath>
 #include <fstream>
+#include <limits>
 #include <list>
 #include <stdexcept>
 #include <string>
@@ -42,7 +43,7 @@ class ContainerVector : public Container<std::vector<Particle<dim>>, dim> {
    // particle data structure: std::vector of Particles
    public:
    std::vector<Particle<dim>> data;
-   int rebuild_freq = 1;  // frequency of neighbor rebuilds in step numbers
+   unsigned rebuild_freq = std::numeric_limits<unsigned>::max();  // frequency of neighbor rebuilds in step numbers
    size_t size() {
       return data.size();
    }
@@ -81,14 +82,14 @@ template <int dim = DIM>
 class ContainerCells : public Container<CellArray<dim>, dim> {
    public:
    CellArray<dim> data;
-   int rebuild_freq;  // frequency of neighbor rebuilds in step numbers
+   unsigned rebuild_freq;  // frequency of neighbor rebuilds in step numbers
    private:
    Box<dim> box;                // private copy of simulation box
    double const cutoff;         // cutoff radius of pair potential
    std::array<int, dim> nc;     // numbers of cells per dimension
    std::array<double, dim> lc;  // edge length of cells per dimension
    public:
-   ContainerCells(Box<dim> b, double cutoff, int rfreq) : box(b), cutoff(cutoff), rebuild_freq(rfreq) {
+   ContainerCells(Box<dim> b, double cutoff, unsigned rfreq) : box(b), cutoff(cutoff), rebuild_freq(rfreq) {
       set_grid(b);
       set_cells(data);
    }
@@ -329,8 +330,8 @@ class Options {
    double te;                  // end time
    std::string const outfile;  // path to output file
    std::ofstream df;           // output dump file
-   int freq;                   // output dump frequency
-   Options(double dt, double ts, double te, std::string outfile, int freq) : dt(dt), ts(ts), te(te), outfile(outfile), freq(freq) {
+   unsigned freq;              // output dump frequency
+   Options(double dt, double ts, double te, std::string outfile, unsigned freq) : dt(dt), ts(ts), te(te), outfile(outfile), freq(freq) {
       df.open(outfile);
       if (!df) {
          throw std::runtime_error("Options: Could not open output dump file.");
