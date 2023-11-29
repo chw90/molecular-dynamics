@@ -18,7 +18,7 @@ variable n_time_steps equal 2000       # Number of time steps
 variable n_output equal 25             # Number of time steps
 
 variable kb equal 1.380649e-23
-variable edge_length equal $((v_n_atoms*v_kb*v_T/v_P)^(1/2))
+variable edge_length equal $((v_n_atoms*v_kb*v_T/v_P)^(1/3))
 
 
 #
