@@ -98,7 +98,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
       });
       // apply thermostat
       if (step % tstat.step == 0) {
-         tstat.apply_velocities(sys);
+         tstat.apply(sys, opt);
       }
    }
    double update_forces(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step) {
@@ -111,10 +111,6 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
       sys.particles.map_pairwise([&pot = pot, &epot](Particle<dim> &pi, Particle<dim> &pj) {
          epot += pot.evaluate(pi, pj);
       });
-      // apply thermostat
-      if (step % tstat.step == 0) {
-         tstat.apply_forces(sys);
-      }
       // apply field and boundary forces
       sys.particles.map([&sys, &field = field, &bound = bound](Particle<dim> &p) {
          field.apply(p);

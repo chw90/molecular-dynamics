@@ -16,8 +16,7 @@ class Thermostat {
    public:
    unsigned const step;  // apply thermostat every step steps
    Thermostat(unsigned step) : step(step){};
-   virtual void apply_forces(System<ContainerType, dim> &sys) = 0;      // apply via forces
-   virtual void apply_velocities(System<ContainerType, dim> &sys) = 0;  // apply via velocity modification
+   virtual void apply(System<ContainerType, dim> &sys, Options const &opt) = 0;  // apply via velocity modification
 };
 
 template <typename ContainerType, int dim = DIM>
@@ -25,8 +24,7 @@ class ThermostatNone : public Thermostat<ContainerType, dim> {
    // no thermostatting
    public:
    ThermostatNone() : Thermostat<ContainerType, dim>(std::numeric_limits<unsigned>::max()){};
-   void apply_forces(System<ContainerType, dim> &sys){};
-   void apply_velocities(System<ContainerType, dim> &sys){};
+   void apply(System<ContainerType, dim> &sys, Options const &opt){};
 };
 
 template <typename ContainerType, int dim = DIM>
@@ -35,8 +33,7 @@ class ThermostatWoodcock : public Thermostat<ContainerType, dim> {
    double const target;  // target temperature
    public:
    ThermostatWoodcock(double target, unsigned step) : target(target), Thermostat<ContainerType, dim>(step){};
-   void apply_forces(System<ContainerType, dim> &sys){};
-   void apply_velocities(System<ContainerType, dim> &sys) {
+   void apply(System<ContainerType, dim> &sys, Options const &opt) {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(target / temp);
       // modify velocities
@@ -55,8 +52,7 @@ class ThermostatBerendsen : public Thermostat<ContainerType, dim> {
    double const damping;  // damping parameter
    public:
    ThermostatBerendsen(double target, double damping, unsigned step) : target(target), damping(damping), Thermostat<ContainerType, dim>(step){};
-   void apply_forces(System<ContainerType, dim> &sys){};
-   void apply_velocities(System<ContainerType, dim> &sys) {
+   void apply(System<ContainerType, dim> &sys, Options const &opt) {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(1 + damping * (target / temp - 1));
       // modify velocities
@@ -71,32 +67,30 @@ class ThermostatBerendsen : public Thermostat<ContainerType, dim> {
 template <typename ContainerType, int dim = DIM>
 class ThermostatGauss : public Thermostat<ContainerType, dim> {
    // Gauss thermostat
+   //
+   // NOTE: This implementation assumes all particle forces to be conservative.
+   //       Introducing non-conservative forces through trajectory modifiers before
+   //       invocation of this thermostat violates this assumption!
    public:
    ThermostatGauss(unsigned step) : Thermostat<ContainerType, dim>(step){};
-   void apply_forces(System<ContainerType, dim> &sys) {
-      // NOTE:
-      // Must be called *after* the particle forces are set according
-      // to the potential and *prior* to any other force modifier.
-
-      // compute zeta
+   void apply(System<ContainerType, dim> &sys, Options const &opt) {
       double zeta_num = 0;  // numerator of zeta
       double zeta_den = 0;  // denominator of zeta
       sys.particles.map([&zeta_num, &zeta_den](Particle<dim> &p) {
          for (int i = 0; i < dim; i++) {
-            zeta_num += p.v[i] * p.f[i];  // assumes that p.f[i] = - dV/dx[i]
+            zeta_num -= p.v[i] * p.f[i];  // assumes that p.f[i] = - dV/dx[i]
             zeta_den += p.m * std::pow(p.v[i], 2);
          }
       });
-      auto zeta = -zeta_num / zeta_den;
+      auto zeta = zeta_num / zeta_den;
 
       // modify forces
-      sys.particles.map([&zeta](Particle<dim> &p) {
+      sys.particles.map([&zeta, &opt](Particle<dim> &p) {
          for (int i = 0; i < dim; i++) {
-            p.f[i] += -zeta * p.m * p.v[i];
+            p.v[i] += opt.dt * zeta * p.v[i];
          }
       });
-   }
-   void apply_velocities(System<ContainerType, dim> &sys){};
+   };
 };
 
 template <typename ContainerType, int dim = DIM>
@@ -113,8 +107,7 @@ class ThermostatAndersen : public Thermostat<ContainerType, dim> {
       stddev = std::sqrt(kb * target / mass);
       vc = std::normal_distribution<double>(0.0, stddev);
    };
-   void apply_forces(System<ContainerType, dim> &sys){};
-   void apply_velocities(System<ContainerType, dim> &sys) {
+   void apply(System<ContainerType, dim> &sys, Options const &opt) {
       // determine number of particles to modify
       auto np = std::floor(rate * sys.particles.size());
       // pick np random particles and override their velocities
