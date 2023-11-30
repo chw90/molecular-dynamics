@@ -7,17 +7,16 @@
 
 using ContainerType = ContainerVector<DIM>;
 
-double const T = 293.15;               // temperature
-double const P = 101325;               // pressure
-double const kb = 1.380649e-23;        // Boltzmann constant
-double const sigma = 3.405e-10;        // Lennard-Jones parameter
-double const epsilon = 1.6567788e-21;  // Lennard-Jones parameter
+// set constants
+int const N = 100;                       // number of particles
+double const m = 6.633521795361493e-26;  // mass
+double const T = 293.15;                 // temperature
+double const P = 101325;                 // pressure
+double const kb = 1.380649e-23;          // Boltzmann constant
+double const sigma = 3.405e-10;          // Lennard-Jones parameter
+double const epsilon = 1.6567788e-21;    // Lennard-Jones parameter
 
 System<ContainerType, DIM> set_system() {
-   // set constants
-   double const m = 6.633521795361493e-26;  // mass
-   int const N = 100;                       // number of particles
-
    // initialize bounding box
    double const lower = 0.0;
    auto const upper = std::pow(N * kb * T / P, 1.0 / 3.0);  // box edge length
