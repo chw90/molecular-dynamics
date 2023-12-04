@@ -102,15 +102,15 @@ int main() {
    auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
 
    // set thermostat
-   auto thermostat = ThermostatNone<ContainerType, DIM>();
-   // auto thermostat = ThermostatWoodcock<ContainerType, DIM>(325.0, 10);
-   // auto thermostat = ThermostatBerendsen<ContainerType, DIM>(325.0, 0.5, 10);
+   // auto thermostat = ThermostatNone<ContainerType, DIM>();
+   // auto thermostat = ThermostatWoodcock<ContainerType, DIM>(T, 1);
+   auto thermostat = ThermostatBerendsen<ContainerType, DIM>(T, 0.01, 1);
    // auto thermostat = ThermostatGauss<ContainerType, DIM>(1);
-   // auto thermostat = ThermostatAndersen<ContainerType, DIM>(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
+   // auto thermostat = ThermostatAndersen<ContainerType, DIM>(T, system.particles.get_random_particle().m, system.constants.kb, 0.05, 1);
 
    // set barostat
-   auto barostat = BarostatNone<ContainerType, DIM>();
-   // auto barostat = BarostatBerendsen<ContainerType, DIM>(2e-3, 30.0, 20*opt.dt, 1);
+   // auto barostat = BarostatNone<ContainerType, DIM>();
+   auto barostat = BarostatBerendsen<ContainerType, DIM>(std::pow(N * kb * T * std::pow(P, 2), 1.0 / 3.0), 30.0, 20 * options.dt, 1);
 
    // set integrator
    auto integrator = IntegratorVelocityVerlet<ContainerType, DIM>(potential, boundary, field, thermostat, barostat);

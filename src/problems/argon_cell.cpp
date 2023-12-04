@@ -7,17 +7,16 @@
 
 using ContainerType = ContainerCells<DIM>;
 
-double const kb = 1.380649e-23;        // Boltzmann constant
-double const sigma = 3.405e-10;        // Lennard-Jones parameter
-double const epsilon = 1.6567788e-21;  // Lennard-Jones parameter
+// set constants
+int const N = 100;                       // number of particles
+double const m = 6.633521795361493e-26;  // mass
+double const T = 293.15;                 // temperature
+double const P = 101325;                 // pressure
+double const kb = 1.380649e-23;          // Boltzmann constant
+double const sigma = 3.405e-10;          // Lennard-Jones parameter
+double const epsilon = 1.6567788e-21;    // Lennard-Jones parameter
 
 System<ContainerType, DIM> set_system() {
-   // set constants
-   double const m = 6.633521795361493e-26;  // mass
-   double const T = 293.15;                 // initial temperature
-   double const P = 101325;                 // initial pressure
-   int const N = 100;                       // number of particles
-
    // initialize bounding box
    double const lower = 0.0;
    auto const upper = std::pow(N * kb * T / P, 1.0 / 3.0);  // box edge length
@@ -73,7 +72,7 @@ Options set_options() {
    // set time stepping options
    double dt = 2e-15;
    double ts = 0.0;
-   double te = 10000 * dt;
+   double te = 20000 * dt;
 
    // set output options
    int freq = 50;
@@ -103,15 +102,15 @@ int main() {
    auto boundary = BoundaryWallReflect<ContainerType, DIM>(1e-2);
 
    // set thermostat
-   auto thermostat = ThermostatNone<ContainerType, DIM>();
-   // auto thermostat = ThermostatWoodcock<ContainerType, DIM>(325.0, 10);
-   // auto thermostat = ThermostatBerendsen<ContainerType, DIM>(325.0, 0.5, 10);
+   // auto thermostat = ThermostatNone<ContainerType, DIM>();
+   // auto thermostat = ThermostatWoodcock<ContainerType, DIM>(T, 1);
+   auto thermostat = ThermostatBerendsen<ContainerType, DIM>(T, 0.01, 1);
    // auto thermostat = ThermostatGauss<ContainerType, DIM>(1);
-   // auto thermostat = ThermostatAndersen<ContainerType, DIM>(325.0, sys.particles[0].m, sys.constants.kb, 0.05, 5);
+   // auto thermostat = ThermostatAndersen<ContainerType, DIM>(T, system.particles.get_random_particle().m, system.constants.kb, 0.05, 1);
 
    // set barostat
-   auto barostat = BarostatNone<ContainerType, DIM>();
-   // auto barostat = BarostatBerendsen<ContainerType, DIM>(2e-3, 30.0, 20*opt.dt, 1);
+   // auto barostat = BarostatNone<ContainerType, DIM>();
+   auto barostat = BarostatBerendsen<ContainerType, DIM>(std::pow(N * kb * T * std::pow(P, 2), 1.0 / 3.0), 30.0, 20 * options.dt, 1);
 
    // set integrator
    auto integrator = IntegratorVelocityVerlet<ContainerType, DIM>(potential, boundary, field, thermostat, barostat);
