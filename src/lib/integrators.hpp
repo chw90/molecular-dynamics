@@ -1,6 +1,7 @@
 #ifndef INTEGRATORS_H_
 #define INTEGRATORS_H_
 
+#include <chrono>
 #include <vector>
 
 #include "barostats.hpp"
@@ -56,7 +57,10 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
       unsigned i = 0;   // timestep counter
       auto t = opt.ts;  // time
 
-      update_forces(sys, opt, i);
+      double epot;                         // potential energy
+      std::chrono::duration<double> tpot;  // potential evaluation runtime
+
+      update_forces(sys, opt, i, epot, tpot);
       dump(sys, opt, i);  // dump initial particle data to disk
       // iterate over timesteps
       while (t < opt.te) {
@@ -66,11 +70,11 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
          update_positions(sys, opt, i);
          bound.apply(sys);
          if (i % sys.particles.rebuild_freq == 0) sys.particles.neighbor_build(sys.box);
-         auto epot = update_forces(sys, opt, i);
+         update_forces(sys, opt, i, epot, tpot);
          update_velocities(sys, opt, i);
 
          // print statistics to stdout and dump particle data to disk
-         print_statistics(sys, epot, i, t);
+         print_statistics(sys, epot, tpot, i, t);
          if (i % opt.freq == 0) dump(sys, opt, i);
       }
    }
@@ -101,22 +105,24 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
          tstat.apply(sys, opt);
       }
    }
-   double update_forces(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step) {
+   void update_forces(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step, double &epot, std::chrono::duration<double> &tpot) {
       // reset forces
       sys.particles.map([](Particle<dim> &p) {
          p.f.fill(0.0);
       });
       // evaluate potential
-      double epot = 0.0;  // potential energy
+      epot = 0.0;
+      const auto tic = std::chrono::steady_clock::now();  // start timer
       sys.particles.map_pairwise([&pot = pot, &epot](Particle<dim> &pi, Particle<dim> &pj) {
          epot += pot.evaluate(pi, pj);
       });
+      const auto toc = std::chrono::steady_clock::now();  // stop timer
+      tpot = toc - tic;
       // apply field and boundary forces
       sys.particles.map([&sys, &field = field, &bound = bound](Particle<dim> &p) {
          field.apply(p);
          bound.apply_forces(p, sys.box);
       });
-      return epot;
    }
 };
 

@@ -1,6 +1,7 @@
 #ifndef STATISTICS_H_
 #define STATISTICS_H_
 
+#include <chrono>
 #include <cmath>
 
 #include "globals.hpp"
@@ -9,17 +10,17 @@
 
 void print_header() {
    // print the table header for the output of print_statistics
-   print("step", "time", "total energy", "kinetic energy", "potential energy", "temperature", "pressure", "volume");
+   print("step", "time", "total energy", "kinetic energy", "potential energy", "temperature", "pressure", "volume", "pair runtime");
 }
 
 template <typename ContainerType, int dim = DIM>
-void print_statistics(System<ContainerType, dim> &sys, double epot, int const i, double const t) {
+void print_statistics(System<ContainerType, dim> &sys, double epot, std::chrono::duration<double> tpot, int const i, double const t) {
    auto ekin = kinetic_energy(sys);
    auto etot = ekin + epot;
    auto temp = temperature(sys, ekin);
    auto press = pressure(sys);
    auto vol = volume(sys);
-   print(i, t, etot, ekin, epot, temp, press, vol);
+   print(i, t, etot, ekin, epot, temp, press, vol, tpot.count());
 }
 
 template <typename ContainerType, int dim = DIM>
