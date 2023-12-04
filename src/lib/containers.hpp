@@ -165,7 +165,13 @@ class ContainerCells : public Container<CellArray<dim>, dim> {
             }
          }
       }
-      // move buffer into data
+      // resize data and move buffer into it
+      if constexpr (dim == 2) {
+         data.resize(boost::extents[nc[0]][nc[1]]);
+      }
+      if constexpr (dim == 3) {
+         data.resize(boost::extents[nc[0]][nc[1]][nc[2]]);
+      }
       data = std::move(buffer);
    }
    template <typename F>
