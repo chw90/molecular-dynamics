@@ -5,7 +5,7 @@
 #include <random>
 #include <string>
 
-constexpr int const DIM = 3;  // default dimension
+constexpr int const DIM = 2;  // default dimension
 
 template <int dim = DIM>
 using array = std::array<double, dim>;

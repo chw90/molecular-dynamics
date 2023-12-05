@@ -72,7 +72,7 @@ Options set_options() {
    // set time stepping options
    double dt = 2e-15;
    double ts = 0.0;
-   double te = 20000 * dt;
+   double te = 10000 * dt;
 
    // set output options
    int freq = 50;
