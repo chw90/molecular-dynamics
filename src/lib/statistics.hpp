@@ -49,12 +49,12 @@ double pressure(System<ContainerType, dim> &sys) {
    double sum = 0.0;
    sys.particles.map([&](Particle<dim> &p) {
       double vv = 0.0;  // dot product of velocity
-      double qf = 0.0;  // dot product of position and force
+      double rf = 0.0;  // dot product of position and force
       for (int k = 0; k < dim; k++) {
          vv += std::pow(p.v[k], 2);
-         qf += p.x[k] * p.f[k];
+         rf += p.x[k] * p.f[k];
       }
-      sum += 0.5 * p.m * vv + qf;
+      sum += 0.5 * p.m * vv + rf;
    });
    return 2.0 / (3.0 * volume) * sum;
 }
