@@ -69,7 +69,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
    private:
    void update_positions(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step) {
       // position update
-      sys.particles.map([&opt](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (int k = 0; k < dim; k++) {
             p.x[k] += opt.dt * (p.v[k] + 0.5 * opt.dt / p.m * p.f[k]);
             p.buffer[k] = p.f[k];  // buffer old forces
@@ -82,7 +82,7 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
    }
    void update_velocities(System<ContainerType, dim> &sys, Options const &opt, unsigned const &step) {
       // velocity update
-      sys.particles.map([&opt](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (int k = 0; k < dim; k++) {
             p.v[k] += 0.5 * opt.dt / p.m * (p.f[k] + p.buffer[k]);
          }
@@ -100,13 +100,13 @@ class IntegratorVelocityVerlet : public Integrator<ContainerType, dim> {
       // evaluate potential
       epot = 0.0;
       const auto tic = std::chrono::steady_clock::now();  // start timer
-      sys.particles.map_pairwise([&pot = pot, &epot](Particle<dim> &pi, Particle<dim> &pj) {
+      sys.particles.map_pairwise([&](Particle<dim> &pi, Particle<dim> &pj) {
          epot += pot.evaluate(pi, pj);
       });
       const auto toc = std::chrono::steady_clock::now();  // stop timer
       tpot = toc - tic;
       // apply field and boundary forces
-      sys.particles.map([&sys, &field = field, &bound = bound](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          field.apply(p);
          bound.apply_forces(p, sys.box);
       });

@@ -37,7 +37,7 @@ class ThermostatWoodcock : public Thermostat<ContainerType, dim> {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(target / temp);
       // modify velocities
-      sys.particles.map([&factor](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (auto &vi : p.v) {
             vi *= factor;
          }
@@ -56,7 +56,7 @@ class ThermostatBerendsen : public Thermostat<ContainerType, dim> {
       auto temp = temperature(sys, kinetic_energy(sys));
       auto factor = std::sqrt(1 + damping * (target / temp - 1));
       // modify velocities
-      sys.particles.map([&factor](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (auto &vi : p.v) {
             vi *= factor;
          }
@@ -76,7 +76,7 @@ class ThermostatGauss : public Thermostat<ContainerType, dim> {
    void apply(System<ContainerType, dim> &sys, Options const &opt) {
       double zeta_num = 0;  // numerator of zeta
       double zeta_den = 0;  // denominator of zeta
-      sys.particles.map([&zeta_num, &zeta_den](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (int i = 0; i < dim; i++) {
             zeta_num -= p.v[i] * p.f[i];  // assumes that p.f[i] = - dV/dx[i]
             zeta_den += p.m * std::pow(p.v[i], 2);
@@ -85,7 +85,7 @@ class ThermostatGauss : public Thermostat<ContainerType, dim> {
       auto zeta = zeta_num / zeta_den;
 
       // modify forces
-      sys.particles.map([&zeta, &opt](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (int i = 0; i < dim; i++) {
             p.v[i] += opt.dt * zeta * p.v[i];
          }

@@ -54,7 +54,7 @@ class BoundaryWallReflect : public Boundary<ContainerType, dim> {
    public:
    BoundaryWallReflect(double const thresh) : thresh(thresh){};
    void apply(System<ContainerType, dim> &sys) {
-      sys.particles.map([&sys, &thresh = thresh](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (int k = 0; k < dim; k++) {
             auto l = sys.box.hi[k] - sys.box.lo[k];  // box length in dimension k
             auto dlo = p.x[k] - sys.box.lo[k];       // distance to lower box bound

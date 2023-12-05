@@ -42,7 +42,7 @@ void dump(System<ContainerType, dim> &sys, Options &opt, unsigned &step) {
    opt.df << "ITEM: ATOMS id type x y z vx vy vz fx fy fz" << '\n';
    int l = 0;
    // for ( auto p: sys.particles) {
-   sys.particles.map([&l, &opt](Particle<dim> &p) {
+   sys.particles.map([&](Particle<dim> &p) {
       // particle ID and type
       opt.df << l << " " << p.type;
       // position

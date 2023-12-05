@@ -26,7 +26,7 @@ void print_statistics(System<ContainerType, dim> &sys, double epot, std::chrono:
 template <typename ContainerType, int dim = DIM>
 double kinetic_energy(System<ContainerType, dim> &sys) {
    double ekin = 0.0;
-   sys.particles.map([&ekin](Particle<dim> &p) {
+   sys.particles.map([&](Particle<dim> &p) {
       for (auto vi : p.v) {
          ekin += 0.5 * p.m * std::pow(vi, 2);
       }
@@ -47,7 +47,7 @@ double pressure(System<ContainerType, dim> &sys) {
    }
 
    double sum = 0.0;
-   sys.particles.map([&sum](Particle<dim> &p) {
+   sys.particles.map([&](Particle<dim> &p) {
       double vv = 0.0;  // dot product of velocity
       double qf = 0.0;  // dot product of position and force
       for (int k = 0; k < dim; k++) {

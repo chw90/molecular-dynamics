@@ -44,7 +44,7 @@ class BarostatBerendsen : public Barostat<ContainerType, dim> {
          sys.box.hi[k] *= factor;
       }
       // scale coordinates
-      sys.particles.map([&factor](Particle<dim> &p) {
+      sys.particles.map([&](Particle<dim> &p) {
          for (int k = 0; k < dim; k++) {
             p.x[k] *= factor;
          }
