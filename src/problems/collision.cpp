@@ -27,8 +27,8 @@ set_system() {
 
    ContainerType p;
 
-   auto p1 = Particle<2>(1, m, {-0.5 * d_eq, 0.0}, {0.0 * d_eq, 0.0}, {0.0, 0.0}, {0.0, 0.0});
-   auto p2 = Particle<2>(1, m, {+0.5 * d_eq, 0.0}, {0.0 * d_eq, 0.0}, {0.0, 0.0}, {0.0, 0.0});
+   auto p1 = Particle<2>(1, m, {-0.5 * d_eq, 0.0}, {0.0 * d_eq, 0.0});
+   auto p2 = Particle<2>(1, m, {+0.5 * d_eq, 0.0}, {0.0 * d_eq, 0.0});
 
    p.insert(p1);
    p.insert(p2);

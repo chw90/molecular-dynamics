@@ -18,9 +18,9 @@ void print_pair(Particle<dim> pi, Particle<dim> pj) {
 }
 
 void test_ContainerVector() {
-   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});
-   auto p2 = Particle<2>(2, 2.0, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});
-   auto p3 = Particle<2>(3, 3.0, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0});
+   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0});
+   auto p2 = Particle<2>(2, 2.0, {0.0, 1.0}, {-1.0, 0.0});
+   auto p3 = Particle<2>(3, 3.0, {0.0, 5.36}, {-0.425, 0.0});
 
    auto particles = ContainerVector<2>();
    particles.insert(p1);
@@ -38,9 +38,9 @@ void test_ContainerVector() {
 }
 
 void test_ContainerCells2D() {
-   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});
-   auto p2 = Particle<2>(2, 2.0, {0.0, 0.3}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});
-   auto p3 = Particle<2>(3, 3.0, {0.3, 0.7}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0});
+   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0});
+   auto p2 = Particle<2>(2, 2.0, {0.0, 0.3}, {-1.0, 0.0});
+   auto p3 = Particle<2>(3, 3.0, {0.3, 0.7}, {-0.425, 0.0});
 
    std::array<double, 2> lo = {0.0, 0.0};
    std::array<double, 2> hi = {1.0, 1.0};
@@ -83,11 +83,11 @@ void test_ContainerCells() {
    hi.fill(upper);
    auto b = Box<dim>(lo, hi);
 
-   // auto p0 = Particle<3>(0, 0.0, {0.7, 0.3, 0.3}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
-   // auto p1 = Particle<3>(1, 1.0, {0.7, 0.3, 0.3}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
-   // auto p2 = Particle<3>(2, 2.0, {0.7, 0.7, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
-   // auto p3 = Particle<3>(3, 3.0, {0.3, 0.7, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
-   // auto p4 = Particle<3>(4, 4.0, {0.7, 0.3, 0.7}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
+   // auto p0 = Particle<3>(0, 0.0, {0.7, 0.3, 0.3}, {0.0, 0.0, 0.0});
+   // auto p1 = Particle<3>(1, 1.0, {0.7, 0.3, 0.3}, {0.0, 0.0, 0.0});
+   // auto p2 = Particle<3>(2, 2.0, {0.7, 0.7, 0.7}, {0.0, 0.0, 0.0});
+   // auto p3 = Particle<3>(3, 3.0, {0.3, 0.7, 0.7}, {0.0, 0.0, 0.0});
+   // auto p4 = Particle<3>(4, 4.0, {0.7, 0.3, 0.7}, {0.0, 0.0, 0.0});
 
    auto particles = ContainerCells<dim>(b, 0.4, 1);
 

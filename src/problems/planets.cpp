@@ -21,10 +21,10 @@ System<ContainerType, 2> set_system() {
 
    ContainerVector<2> p;
 
-   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});           // sun
-   auto p2 = Particle<2>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0}, {0.0, 0.0}, {0.0, 0.0});       // earth
-   auto p3 = Particle<2>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0}, {0.0, 0.0}, {0.0, 0.0});   // jupiter
-   auto p4 = Particle<2>(4, 1.0e-14, {34.75, 0.0}, {0.0, 0.0296}, {0.0, 0.0}, {0.0, 0.0});  // halley
+   auto p1 = Particle<2>(1, 1.0, {0.0, 0.0}, {0.0, 0.0});           // sun
+   auto p2 = Particle<2>(2, 3.0e-6, {0.0, 1.0}, {-1.0, 0.0});       // earth
+   auto p3 = Particle<2>(3, 9.55e-4, {0.0, 5.36}, {-0.425, 0.0});   // jupiter
+   auto p4 = Particle<2>(4, 1.0e-14, {34.75, 0.0}, {0.0, 0.0296});  // halley
 
    p.insert(p1);
    p.insert(p2);
