@@ -11,8 +11,8 @@ template <typename ContainerType, int dim = DIM>
 class Boundary {
    // abstract base class for boundaries
    public:
-   virtual void apply(System<ContainerType, dim> &sys) = 0;      // apply via general system modification
-   virtual void apply_forces(Particle<dim> &p, Box<dim> b) = 0;  // apply via boundary forces
+   virtual void apply(System<ContainerType, dim> &sys) = 0;       // apply via general system modification
+   virtual void apply_forces(Particle<dim> &p, Box<dim> &b) = 0;  // apply via boundary forces
 };
 
 template <typename ContainerType, int dim = DIM>
@@ -20,7 +20,7 @@ class BoundaryNone : public Boundary<ContainerType, dim> {
    // no boundary
    public:
    void apply(System<ContainerType, dim> &sys){};
-   void apply_forces(Particle<dim> &p, Box<dim> b){};
+   void apply_forces(Particle<dim> &p, Box<dim> &b){};
 };
 
 template <typename ContainerType, int dim = DIM>
@@ -31,7 +31,7 @@ class BoundaryWallHarmonic : public Boundary<ContainerType, dim> {
    public:
    BoundaryWallHarmonic(double epsilon, double cutoff) : epsilon(epsilon), cutoff(cutoff){};
    void apply(System<ContainerType, dim> &sys){};
-   void apply_forces(Particle<dim> &p, Box<dim> b) {
+   void apply_forces(Particle<dim> &p, Box<dim> &b) {
       // set repulsive force
       for (int k = 0; k < dim; k++) {
          auto l = b.hi[k] - b.lo[k];   // box length in dimension k
@@ -74,7 +74,7 @@ class BoundaryWallReflect : public Boundary<ContainerType, dim> {
          }
       });
    }
-   void apply_forces(Particle<dim> &p, Box<dim> b){};
+   void apply_forces(Particle<dim> &p, Box<dim> &b){};
 };
 
 #endif  // BOUNDARIES_H_
