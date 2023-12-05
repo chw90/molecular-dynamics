@@ -75,21 +75,17 @@ def set_plot(dumps):
     if ContainerVector.size > 0:
         xy = (ContainerVector[:, 0], ContainerVector[:, 1])
         slope = linregress(np.log(xy[0]), np.log(xy[1])).slope
-        opt = {
-            "color": "red",
-            "label": rf"ContainerVector (slope $\approx$ {slope:4.3f})",
-        }
-        ax[0].plot(*xy, **opt)
-        ax[1].loglog(*xy, **opt)
+        ax[0].plot(*xy, color="red", label="ContainerVector")
+        ax[1].loglog(
+            *xy, color="red", label=rf"ContainerVector (slope $\approx$ {slope:4.3f})"
+        )
     if ContainerCells.size > 0:
         xy = (ContainerCells[:, 0], ContainerCells[:, 1])
         slope = linregress(np.log(xy[0]), np.log(xy[1])).slope
-        opt = {
-            "color": "green",
-            "label": rf"ContainerCells (slope $\approx$ {slope:4.3f})",
-        }
-        ax[0].plot(*xy, **opt)
-        ax[1].loglog(*xy, **opt)
+        ax[0].plot(*xy, color="green", label="ContainerCells")
+        ax[1].loglog(
+            *xy, color="green", label=rf"ContainerCells (slope $\approx$ {slope:4.3f})"
+        )
 
     # add labels and legend
     ax[0].set_xlabel("particle count")
