@@ -14,7 +14,7 @@ double const T = 293.15;                 // temperature
 double const P = 101325;                 // pressure
 double const kb = 1.380649e-23;          // Boltzmann constant
 double const sigma = 3.405e-10;          // Lennard-Jones parameter
-double const epsilon = 1.6567788e-21;    // Lennard-Jones parameter
+double const epsilon = 120 * kb;         // Lennard-Jones parameter
 
 System<ContainerType, DIM> set_system() {
    // initialize bounding box

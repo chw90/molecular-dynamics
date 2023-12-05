@@ -14,7 +14,7 @@ double const T = 293.15;                 // temperature
 double const P = 101325;                 // pressure
 double const kb = 1.380649e-23;          // Boltzmann constant
 double const sigma = 3.405e-10;          // Lennard-Jones parameter
-double const epsilon = 1.6567788e-21;    // Lennard-Jones parameter
+double const epsilon = 120 * kb;         // Lennard-Jones parameter
 
 System<ContainerType, DIM> set_system() {
    // initialize bounding box
@@ -26,11 +26,11 @@ System<ContainerType, DIM> set_system() {
    auto b = Box<DIM>(lo, hi);
 
    // define lattice
-   auto const margin = 2e-2 * (upper - lower);                          // lattice to wall distance
-   auto const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
-   double const a = (upper - lower - 2 * margin) / (n - 1);             // lattice constant
+   auto const margin = 2e-2 * (upper - lower);                         // lattice to wall distance
+   int const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
+   double const a = (upper - lower - 2 * margin) / (n - 1);            // lattice constant
 
-   // lambda function to compute lattice indices from linear particle index li
+   // lambda function to compute lattice indices from linear particle index
    auto indices = [&n](int index) {
       if constexpr (DIM == 2) {
          auto j = index / n;
