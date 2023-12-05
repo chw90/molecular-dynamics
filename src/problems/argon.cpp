@@ -26,9 +26,9 @@ System<ContainerType, DIM> set_system() {
    auto b = Box<DIM>(lo, hi);
 
    // define lattice
-   auto const margin = 2e-2 * (upper - lower);                          // lattice to wall distance
-   auto const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
-   double const a = (upper - lower - 2 * margin) / (n - 1);             // lattice constant
+   auto const margin = 2e-2 * (upper - lower);                         // lattice to wall distance
+   int const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
+   double const a = (upper - lower - 2 * margin) / (n - 1);            // lattice constant
 
    // lambda function to compute lattice indices from linear particle index
    auto indices = [&n](int index) {
