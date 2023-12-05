@@ -30,7 +30,7 @@ System<ContainerType, DIM> set_system() {
    auto const n = static_cast<int>(std::ceil(std::pow(N, 1.0 / DIM)));  // lattice steps per dimension
    double const a = (upper - lower - 2 * margin) / (n - 1);             // lattice constant
 
-   // lambda function to compute lattice indices from linear particle index li
+   // lambda function to compute lattice indices from linear particle index
    auto indices = [&n](int index) {
       if constexpr (DIM == 2) {
          auto j = index / n;
