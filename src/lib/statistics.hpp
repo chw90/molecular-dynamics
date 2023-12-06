@@ -41,10 +41,7 @@ double temperature(System<ContainerType, dim> &sys, double const ekin) {
 
 template <typename ContainerType, int dim = DIM>
 double pressure(System<ContainerType, dim> &sys) {
-   double volume = 1.0;
-   for (int k = 0; k < dim; k++) {
-      volume *= sys.box.hi[k] - sys.box.lo[k];
-   }
+   auto vol = volume(sys);
 
    double sum = 0.0;
    sys.particles.map([&](Particle<dim> &p) {
@@ -56,7 +53,7 @@ double pressure(System<ContainerType, dim> &sys) {
       }
       sum += 0.5 * p.m * vv + rf;
    });
-   return 2.0 / (3.0 * volume) * sum;
+   return 2.0 / (3.0 * vol) * sum;
 }
 
 template <typename ContainerType, int dim = DIM>
