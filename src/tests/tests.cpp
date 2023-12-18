@@ -139,7 +139,7 @@ struct FixtureIntegrator {
          particles.insert(Particle<3>(1, 1.0, {0.0, 0.0, 1.0}, {1.0, 0.0, 1.0}));
       }
       sys = new System(particles, box, constants);
-      opt = new Options(5.0, 0.0, 1.0, "test.md", 1);
+      opt = new Options(5.0, 0.0, 5.0, "test.md", 1);
       integrator = new IntegratorVelocityVerlet(*pot, *bound, *field, *tstat, *bstat);
    };
    ~FixtureIntegrator() {
@@ -264,6 +264,59 @@ BOOST_FIXTURE_TEST_CASE_TEMPLATE(update_velocities, Fixture, test_integrator_fix
       BOOST_TEST(p1.v == v1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
       BOOST_TEST(p2.v == v2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
       BOOST_TEST(p3.v == v3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+   }
+}
+
+BOOST_FIXTURE_TEST_CASE_TEMPLATE(integrate, Fixture, test_integrator_fixtures, Fixture) {
+   auto &sys = *(Fixture::sys);
+   auto &opt = *(Fixture::opt);
+   auto &integrator = *(Fixture::integrator);
+
+   auto &p1 = sys.particles.data[0];
+   auto &p2 = sys.particles.data[1];
+   auto &p3 = sys.particles.data[2];
+
+   integrator.run(sys, opt);
+
+   if constexpr (Fixture::dimension == 2) {
+      std::vector<double> x1 = {14.08203125, 9.08203125};
+      std::vector<double> x2 = {-8.665679931640625, -4.4163513183593759};
+      std::vector<double> x3 = {5.583648681640625, -3.665679931640625};
+      BOOST_TEST(p1.x == x1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p2.x == x2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p3.x == x3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      std::vector<double> v1 = {2.816406244572879, 1.8164062420205942};
+      std::vector<double> v2 = {-1.9331359706038813, -0.88327026274726539};
+      std::vector<double> v3 = {1.1167297260310025, -0.9331359792733287};
+      BOOST_TEST(p1.v == v1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p2.v == v2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p3.v == v3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      std::vector<double> f1 = {-2.1708484064010856e-09, -3.1917623508161171e-09};
+      std::vector<double> f2 = {6.2896973827840536e-09, 3.6984386975736069e-10};
+      std::vector<double> f3 = {-4.118848976382968e-09, 2.8219184810587564e-09};
+      BOOST_TEST(p1.f == f1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p2.f == f2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p3.f == f3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+   }
+   if constexpr (Fixture::dimension == 3) {
+      std::vector<double> x1 = {14.08203125, 0.0, 9.08203125};
+      std::vector<double> x2 = {-8.665679931640625, 0.0, -4.4163513183593759};
+      std::vector<double> x3 = {5.583648681640625, 0.0, -3.665679931640625};
+      BOOST_TEST(p1.x == x1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p2.x == x2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p3.x == x3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      std::vector<double> v1 = {2.816406244572879, 0.0, 1.8164062420205942};
+      std::vector<double> v2 = {-1.9331359706038813, 0.0, -0.88327026274726539};
+      std::vector<double> v3 = {1.1167297260310025, 0.0, -0.9331359792733287};
+      BOOST_TEST(p1.v == v1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p2.v == v2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p3.v == v3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      std::vector<double> f1 = {-2.1708484064010856e-09, 0.0, -3.1917623508161171e-09};
+      std::vector<double> f2 = {6.2896973827840536e-09, 0.0, 3.6984386975736069e-10};
+      std::vector<double> f3 = {-4.118848976382968e-09, 0.0, 2.8219184810587564e-09};
+      BOOST_TEST(p1.f == f1, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p2.f == f2, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
+      BOOST_TEST(p3.f == f3, boost::test_tools::tolerance(TOL) << boost::test_tools::per_element());
    }
 }
 
