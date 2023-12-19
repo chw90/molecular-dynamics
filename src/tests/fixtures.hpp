@@ -79,7 +79,6 @@ struct FixtureIntegrator : FixtureSystem<dim> {
    Field<dim> *field;
    Thermostat<ContainerType, dim> *tstat;
    Barostat<ContainerType, dim> *bstat;
-   // System<ContainerType, dim> *sys;
    Options *opt;
    IntegratorVelocityVerlet<ContainerType, dim> *integrator;
 
