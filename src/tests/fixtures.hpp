@@ -73,8 +73,6 @@ struct FixturePotential {
 template <int dim>
    requires(dim == 2 || dim == 3)
 struct FixtureIntegrator : FixtureSystem<dim> {
-   static const int dimension = dim;
-
    typedef ContainerVector<dim> ContainerType;
    Potential<dim> *pot;
    Boundary<ContainerType, dim> *bound;
@@ -124,5 +122,20 @@ struct FixtureField {
       delete p;
    }
 };
+
+template <int dim>
+   requires(dim == 2 || dim == 3)
+struct FixtureThermostat : FixtureSystem<dim> {
+   Options *opt;
+   FixtureThermostat() {
+      opt = new Options(5.0, 0.0, 5.0, "test.md", 1);
+   }
+   ~FixtureThermostat() {
+      delete opt;
+   }
+};
+
+template <int dim>
+using FixtureBarostat = FixtureThermostat<dim>;
 
 #endif  // FIXTURES_H_
