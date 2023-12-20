@@ -1,7 +1,9 @@
 #include "barostats.hpp"
 #include "boundaries.hpp"
+#include "containers.hpp"
 #include "fields.hpp"
 #include "integrators.hpp"
+#include "particles.hpp"
 #include "potentials.hpp"
 #include "thermostats.hpp"
 
